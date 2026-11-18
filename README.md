@@ -75,4 +75,6 @@ npm.cmd run dev
 
 El sitio de producción se publica en Vercel con la configuración de `vercel.json` en la raíz: `installCommand` y `buildCommand` apuntan a `apps/web` y `outputDirectory` es `apps/web/dist`. Para desplegar manualmente desde una máquina con Vercel CLI, ejecuta `vercel --prod --yes` en la raíz del repositorio.
 
-El repositorio es privado: un administrador debe agregar a cada compañero como colaborador en **Settings → Collaborators** para que pueda clonar y hacer push.
+El repositorio es público: cualquier compañero puede clonarlo con el comando anterior sin necesidad de invitación. Para poder hacer `push`, un administrador debe agregarlo como colaborador en **Settings → Collaborators**.
+
+Para habilitar deploys automáticos al hacer `push`, instala la app de Vercel en GitHub (https://github.com/apps/vercel), autoriza este repositorio y conéctalo desde **Vercel → Project → Settings → Git**.
