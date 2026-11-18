@@ -59,3 +59,20 @@ npm.cmd run test:e2e
 Las pruebas de navegador usan Edge instalado y necesitan el servidor local iniciado. Ejecutan contextos aislados sin modificar tus datos habituales. `package-lock.json` conserva las versiones instaladas.
 
 La interfaz y documentación anteriores se conservan en `apps/web/legacy/`. El backend e infraestructura anteriores se mantienen como referencia futura y no intervienen en la demo.
+
+## Trabajo en equipo y despliegue
+
+Repositorio: https://github.com/YomarST3/neurolab-enterprise
+
+Para trabajar en local:
+
+```powershell
+git clone https://github.com/YomarST3/neurolab-enterprise.git
+cd neurolab-enterprise/apps/web
+npm.cmd ci
+npm.cmd run dev
+```
+
+El sitio de producción se publica en Vercel con la configuración de `vercel.json` en la raíz: `installCommand` y `buildCommand` apuntan a `apps/web` y `outputDirectory` es `apps/web/dist`. Para desplegar manualmente desde una máquina con Vercel CLI, ejecuta `vercel --prod --yes` en la raíz del repositorio.
+
+El repositorio es privado: un administrador debe agregar a cada compañero como colaborador en **Settings → Collaborators** para que pueda clonar y hacer push.
