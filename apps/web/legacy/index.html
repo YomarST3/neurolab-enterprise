@@ -1,0 +1,3082 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroLab Enterprise | Plataforma de Redes Neuronales Artificiales</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="dark"] {
+      /* Refined, agreeable and precise charcoal & slate gray */
+      --bg-primary: #121316;
+      --bg-secondary: #1a1b20;
+      --bg-tertiary: #252731;
+      --bg-card: rgba(26, 27, 33, 0.88);
+      --bg-sidebar: #15161b;
+      --bg-topbar: rgba(21, 22, 27, 0.90);
+      --border-color: #2b2e38;
+      --border-focus: #38bdf8;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --accent-blue: #0284c7;
+      --accent-cyan: #06b6d4;
+      --accent-teal: #0d9488;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-indigo: #6366f1;
+      --accent-purple: #8b5cf6;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.35);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.45), 0 2px 4px -2px rgba(0,0,0,0.3);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.55), 0 4px 6px -4px rgba(0,0,0,0.4);
+    }
+
+    [data-theme="light"] {
+      /* Soft, agreeable and elegant light silver gray */
+      --bg-primary: #f4f5f8;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #e6e8ec;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --bg-sidebar: #ebeef2;
+      --bg-topbar: rgba(255, 255, 255, 0.92);
+      --border-color: #d3d6de;
+      --border-focus: #0284c7;
+      --text-main: #14161b;
+      --text-muted: #4b5563;
+      --text-dim: #6b7280;
+      --accent-blue: #0284c7;
+      --accent-cyan: #0284c7;
+      --accent-teal: #0d9488;
+      --accent-emerald: #059669;
+      --accent-amber: #d97706;
+      --accent-rose: #e11d48;
+      --accent-indigo: #4f46e5;
+      --accent-purple: #7c3aed;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    code, pre {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Layout Shell */
+    .app-shell {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background-color: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 20;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .brand {
+      padding: 20px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+    }
+
+    .brand-info h1 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--text-main);
+    }
+
+    .brand-info p {
+      font-size: 10px;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+    }
+
+    .nav-sections {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-dim);
+      padding: 10px 12px 4px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+    }
+
+    .nav-item.active {
+      background-color: rgba(6, 182, 212, 0.12);
+      color: var(--accent-cyan);
+      border-color: rgba(6, 182, 212, 0.3);
+      font-weight: 600;
+    }
+
+    .nav-item .badge {
+      margin-left: auto;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background-color: var(--bg-tertiary);
+      color: var(--text-muted);
+    }
+
+    .sidebar-footer {
+      padding: 14px 16px;
+      border-top: 1px solid var(--border-color);
+      background-color: var(--bg-sidebar);
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px;
+      border-radius: var(--radius-md);
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 12px;
+      color: white;
+    }
+
+    .user-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .user-name {
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-main);
+    }
+
+    .user-role-badge {
+      font-size: 10px;
+      color: var(--accent-cyan);
+    }
+
+    /* Main Content Area */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .topbar {
+      height: 60px;
+      background-color: var(--bg-topbar);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 10;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .breadcrumbs span.current {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .workspace-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      background-color: rgba(2, 132, 199, 0.12);
+      border: 1px solid rgba(2, 132, 199, 0.3);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--accent-cyan);
+    }
+
+    .workspace-indicator .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .role-switcher {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-secondary);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      font-size: 12px;
+    }
+
+    .role-switcher select {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .mode-tag {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      background-color: rgba(16, 185, 129, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background-color: var(--bg-secondary);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--border-focus);
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Guided Demo Ribbon (Document 2 Secuencia Operativa Paso a Paso) */
+    .demo-ribbon {
+      background: linear-gradient(90deg, var(--bg-secondary), var(--bg-primary) 50%, var(--bg-secondary));
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .demo-steps {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+    }
+
+    .demo-step-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      font-size: 11px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .demo-step-btn:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .demo-step-btn.completed {
+      border-color: rgba(16, 185, 129, 0.5);
+      color: var(--accent-emerald);
+    }
+
+    .demo-step-btn.active {
+      background-color: var(--accent-indigo);
+      color: white;
+      border-color: var(--accent-indigo);
+      font-weight: 600;
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+    }
+
+    /* Content Viewport */
+    .viewport {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      background: radial-gradient(circle at top right, rgba(14, 165, 233, 0.05), transparent 400px),
+                  radial-gradient(circle at bottom left, rgba(99, 102, 241, 0.04), transparent 400px);
+    }
+
+    /* Common Card & Grid Elements */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Stat Cards */
+    .stat-card {
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent-cyan);
+    }
+
+    .stat-card.emerald::before { background: var(--accent-emerald); }
+    .stat-card.indigo::before { background: var(--accent-indigo); }
+    .stat-card.amber::before { background: var(--accent-amber); }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 4px 0 2px;
+    }
+
+    .stat-detail {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #0274b0;
+      box-shadow: 0 0 12px rgba(2, 132, 199, 0.4);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-tertiary);
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: #3b4c65;
+    }
+
+    .btn-success {
+      background-color: var(--accent-emerald);
+      color: #042f1d;
+      font-weight: 600;
+    }
+
+    .btn-success:hover {
+      background-color: #0d9668;
+    }
+
+    .btn-danger {
+      background-color: rgba(244, 63, 94, 0.15);
+      color: var(--accent-rose);
+      border-color: rgba(244, 63, 94, 0.3);
+    }
+
+    .btn-danger:hover {
+      background-color: rgba(244, 63, 94, 0.25);
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 11px;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background-color: rgba(15, 23, 42, 0.6);
+      padding: 12px 16px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+      color: var(--text-main);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .status-queued { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+    .status-preparing { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+    .status-running { background: rgba(245, 158, 11, 0.15); color: #fbbf24; animation: pulse 1.5s infinite; }
+    .status-completed { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .status-failed { background: rgba(244, 63, 94, 0.15); color: #fb7185; }
+    .status-cancelled { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* Module Navigation Panels */
+    .module-pane {
+      display: none;
+    }
+
+    .module-pane.active {
+      display: block;
+      animation: fadeIn 0.2s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Interactive Sliders & Forms */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease, background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    input[type=range] {
+      flex: 1;
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    /* Tabs */
+    .tab-nav {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-cyan);
+      border-bottom-color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    /* Diagram / Graph Preview */
+    .graph-canvas {
+      width: 100%;
+      height: 280px;
+      background-color: var(--bg-secondary);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    /* Custom Math & Code Displays */
+    .math-block {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent-cyan);
+      font-size: 13px;
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .code-preview {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent-cyan);
+      overflow-x: auto;
+      max-height: 260px;
+      line-height: 1.6;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    /* Interactive Confusion Matrix */
+    .confusion-grid {
+      display: grid;
+      grid-template-columns: 80px 1fr 1fr;
+      grid-template-rows: 40px 1fr 1fr;
+      gap: 6px;
+      max-width: 420px;
+      margin: 16px auto;
+      text-align: center;
+    }
+
+    .matrix-cell {
+      padding: 16px 12px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .matrix-tp { background: rgba(16, 185, 129, 0.25); border: 1px solid #10b981; color: #6ee7b7; }
+    .matrix-tn { background: rgba(14, 165, 233, 0.25); border: 1px solid #0ea5e9; color: #7dd3fc; }
+    .matrix-fp { background: rgba(244, 63, 94, 0.2); border: 1px solid #f43f5e; color: #fda4af; }
+    .matrix-fn { background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; color: #fde68a; }
+
+    /* Progress bar */
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background-color: var(--bg-tertiary);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-emerald));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--accent-cyan);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 1000;
+      animation: slideUp 0.2s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-content {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      width: 540px;
+      max-width: 90vw;
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">N</div>
+      <div class="brand-info">
+        <h1>NeuroLab Enterprise</h1>
+        <p>Semana 11 • Deep Learning</p>
+      </div>
+    </div>
+
+    <nav class="nav-sections">
+      <div class="nav-label">General</div>
+      <a class="nav-item active" onclick="switchModule('m01-dashboard', this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h7v9H3zm11 0h7v5h-7zm0 9h7v9h-7zM3 16h7v5H3z"/></svg>
+        M01. Inicio / Dashboard
+      </a>
+      <a class="nav-item" onclick="switchModule('m02-projects', this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
+        M02. Proyectos de IA
+      </a>
+
+      <div class="nav-label">Académico & Diseño</div>
+      <a class="nav-item" onclick="switchModule('m03-fundamentals', this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        M03. Fundamentos
+        <span class="badge" style="background: rgba(99,102,241,0.2); color:#a5b4fc;">Sem 11</span>
+      </a>
+      <a class="nav-item" onclick="switchModule('m04-architectures', this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="9" y="15" width="6" height="6" rx="1"/><path d="M6 9v3h12V9M12 12v3"/></svg>
+        M04. Arquitecturas
+      </a>
+
+      <div class="nav-label">Operaciones & ML</div>
+      <a class="nav-item" onclick="switchModule('m05-datasets', this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7"/><path d="M3 10h18M10 3v18"/></svg>
+        M05. Datasets (EDA)
+        <span class="badge" style="background: rgba(16,185,129,0.2); color:#6ee7b7;">Primario</span>
+      </a>
+      <a class="nav-item" onclick="switchModule('m06-training', this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        M06. Entrenamientos
+      </a>
+      <a class="nav-item" onclick="switchModule('m07-evaluation', this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        M07. Evaluación & Métricas
+      </a>
+
+      <div class="nav-label">Gobierno & Reportes</div>
+      <a class="nav-item" onclick="switchModule('m08-models', this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>
+        M08. Registro de Modelos
+      </a>
+      <a class="nav-item" onclick="switchModule('m09-reports', this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        M09. Reportes & PDF
+      </a>
+      <a class="nav-item" onclick="switchModule('m10-admin', this)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        M10. Admin & Auditoría
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-pill">
+        <div class="avatar" id="currentAvatar">AV</div>
+        <div class="user-meta">
+          <div class="user-name" id="currentUserName">Dr. Alex Vance</div>
+          <div class="user-role-badge" id="currentUserRole">Administrador</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Area -->
+  <div class="main-wrapper">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="breadcrumbs">
+          <span>NeuroLab</span> /
+          <span class="current" id="breadcrumbModule">M01. Inicio / Dashboard</span>
+        </div>
+        <div class="workspace-indicator">
+          <span class="dot"></span>
+          <span id="activeWorkspaceName">Workspace: Arritmia_MLP_2026</span>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <!-- Dark / Light Theme Mode Toggle -->
+        <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Alternar Modo Nocturno / Modo Claro">
+          <span id="themeToggleIcon">🌙</span>
+          <span id="themeToggleText">Modo Nocturno</span>
+        </button>
+
+        <div class="role-switcher">
+          <span style="color:var(--text-muted)">Rol RBAC:</span>
+          <select id="roleSelector" onchange="changeActiveRole(this.value)">
+            <option value="Administrador">Administrador</option>
+            <option value="Responsable de proyecto">Responsable de proyecto</option>
+            <option value="Ingeniero de IA" selected>Ingeniero de IA</option>
+            <option value="Revisor">Revisor</option>
+            <option value="Lector">Lector (Solo Lectura)</option>
+          </select>
+        </div>
+
+        <div class="mode-tag">
+          <span style="display:inline-block;width:6px;height:6px;background:#10b981;border-radius:50%"></span>
+          Modo Autónomo Client-Side (Simulado / TFJS)
+        </div>
+      </div>
+    </header>
+
+    <!-- Guided Demo Step Ribbon (Secuencia Operativa Paso a Paso) -->
+    <div class="demo-ribbon">
+      <div style="font-weight:600; color:#c7d2fe; display:flex; align-items:center; gap:6px;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Secuencia Operativa:
+      </div>
+      <div class="demo-steps">
+        <button class="demo-step-btn active" id="stepBtn-1" onclick="jumpToStep(1)">1° M02 Proyectos</button>
+        <button class="demo-step-btn" id="stepBtn-2" onclick="jumpToStep(2)">2° M05 Dataset (EDA)</button>
+        <button class="demo-step-btn" id="stepBtn-3" onclick="jumpToStep(3)">3° M04 Arquitectura</button>
+        <button class="demo-step-btn" id="stepBtn-4" onclick="jumpToStep(4)">4° M06 Entrenamiento</button>
+        <button class="demo-step-btn" id="stepBtn-5" onclick="jumpToStep(5)">5° M07 Métricas</button>
+        <button class="demo-step-btn" id="stepBtn-6" onclick="jumpToStep(6)">6° M08/M09 Registro & PDF</button>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="advanceDemoStep()">Siguiente Paso →</button>
+    </div>
+
+    <!-- Viewport Container -->
+    <main class="viewport">
+
+      <!-- ========================================== -->
+      <!-- M01: INICIO / DASHBOARD                    -->
+      <!-- ========================================== -->
+      <section id="m01-dashboard" class="module-pane active">
+        <div class="grid-4">
+          <div class="stat-card">
+            <div class="stat-label">Proyectos Registrados</div>
+            <div class="stat-value" id="dashTotalProjects">4</div>
+            <div class="stat-detail">Workspace activo: Cardiopatías</div>
+          </div>
+          <div class="stat-card emerald">
+            <div class="stat-label">Modelos en Producción</div>
+            <div class="stat-value" id="dashTotalModels">3</div>
+            <div class="stat-detail">2 Aprobados • 1 En Revisión</div>
+          </div>
+          <div class="stat-card indigo">
+            <div class="stat-label">Precisión Promedio</div>
+            <div class="stat-value" id="dashAvgAccuracy">94.8%</div>
+            <div class="stat-detail">Evaluado con Test Sets aislados</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-label">Entrenamientos Totales</div>
+            <div class="stat-value" id="dashTotalJobs">12</div>
+            <div class="stat-detail">10 Completados • 2 Cancelados</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Recent Training Jobs -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Entrenamientos Recientes</h2>
+                <p class="card-subtitle">Seguimiento de estados persistidos y telemetría</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="switchModule('m06-training')">Nueva Ejecución</button>
+            </div>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID Trabajo</th>
+                    <th>Arquitectura</th>
+                    <th>Dataset</th>
+                    <th>Estado</th>
+                    <th>Épocas</th>
+                    <th>Precisión</th>
+                  </tr>
+                </thead>
+                <tbody id="dashJobsTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- System Health & Architecture Summary -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Salud de la Infraestructura</h2>
+                <p class="card-subtitle">Monitoreo de recursos y cuotas (CPU/Memoria/Workers)</p>
+              </div>
+              <span class="status-badge status-completed">Sistema Estable</span>
+            </div>
+            
+            <div style="margin-bottom:14px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+                <span>Uso de CPU simulado</span>
+                <span style="font-weight:600; color:var(--accent-cyan)">24.2%</span>
+              </div>
+              <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 24.2%;"></div></div>
+            </div>
+
+            <div style="margin-bottom:14px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+                <span>Asignación de Memoria</span>
+                <span style="font-weight:600; color:var(--accent-emerald)">512 MB / 4096 MB</span>
+              </div>
+              <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 12.5%; background: var(--accent-emerald)"></div></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;">
+              <div style="background:var(--bg-secondary); padding:10px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                <div style="font-size:11px; color:var(--text-muted)">Workers Disponibles</div>
+                <div style="font-size:16px; font-weight:700;">4 / 4 Libres</div>
+              </div>
+              <div style="background:var(--bg-secondary); padding:10px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                <div style="font-size:11px; color:var(--text-muted)">Canal de Eventos</div>
+                <div style="font-size:16px; font-weight:700; color:var(--accent-cyan);">SSE / Reactive</div>
+              </div>
+            </div>
+
+            <div style="margin-top:20px; padding:12px; background:rgba(99,102,241,0.1); border-radius:var(--radius-sm); border:1px solid rgba(99,102,241,0.3); font-size:12px;">
+              <strong>Objetivo Semana 11:</strong> Define la estructura y crea una red neuronal artificial con TensorFlow/Keras y evaluación trazable.
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================== -->
+      <!-- M02: GESTIÓN DE PROYECTOS DE IA            -->
+      <!-- ========================================== -->
+      <section id="m02-projects" class="module-pane">
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Gestión de Proyectos de Inteligencia Artificial</h2>
+              <p class="card-subtitle">Paso 1: Establece el Workspace contenedor y asigna roles RBAC</p>
+            </div>
+            <button class="btn btn-primary" onclick="openNewProjectModal()">+ Crear Nuevo Proyecto</button>
+          </div>
+
+          <div style="display:flex; gap:12px; margin-bottom:16px;">
+            <input type="text" id="projectSearchInput" class="form-control" style="max-width:320px;" placeholder="Buscar proyecto por nombre o etiqueta..." oninput="filterProjectsTable()">
+            <select id="projectFamilyFilter" class="form-control" style="max-width:200px;" onchange="filterProjectsTable()">
+              <option value="ALL">Todas las familias</option>
+              <option value="Feedforward">Feedforward (MLP)</option>
+              <option value="CNN">Convolucional (CNN)</option>
+              <option value="RNN">Recurrente (RNN)</option>
+              <option value="GAN">Generativa (GAN)</option>
+            </select>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre del Proyecto</th>
+                  <th>Problema / Tipo</th>
+                  <th>Propietario</th>
+                  <th>Familia</th>
+                  <th>Etiquetas</th>
+                  <th>Estado</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="projectsTableBody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================== -->
+      <!-- M03: FUNDAMENTOS NEURONALES (SEMANA 11)   -->
+      <!-- ========================================== -->
+      <section id="m03-fundamentals" class="module-pane">
+        <div class="tab-nav">
+          <button class="tab-btn active" onclick="switchFundTab('simulator', this)">Simulador Interactivo de Neurona</button>
+          <button class="tab-btn" onclick="switchFundTab('activations', this)">Funciones de Activación</button>
+          <button class="tab-btn" onclick="switchFundTab('families', this)">Familias de Redes</button>
+          <button class="tab-btn" onclick="switchFundTab('glossary', this)">Glosario Semana 11</button>
+        </div>
+
+        <!-- Tab 1: Simulador de Neurona -->
+        <div id="fund-tab-simulator">
+          <div class="grid-2">
+            <div class="card">
+              <h3 class="card-title">Ajuste de Entradas, Pesos y Sesgo (Bias)</h3>
+              <p class="card-subtitle">Observa cómo varía la suma ponderada z = ∑(w_i * x_i) + b en tiempo real</p>
+
+              <div style="margin-top:16px;">
+                <div class="form-group">
+                  <div class="form-label" style="display:flex; justify-content:space-between;">
+                    <span>Entrada x1: <strong id="valX1">0.80</strong></span>
+                    <span>Peso w1: <strong id="valW1">1.50</strong></span>
+                  </div>
+                  <div class="slider-container">
+                    <input type="range" id="sliderX1" min="-2" max="2" step="0.1" value="0.8" oninput="updateNeuronSim()">
+                    <input type="range" id="sliderW1" min="-3" max="3" step="0.1" value="1.5" oninput="updateNeuronSim()">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="form-label" style="display:flex; justify-content:space-between;">
+                    <span>Entrada x2: <strong id="valX2">-0.50</strong></span>
+                    <span>Peso w2: <strong id="valW2">2.00</strong></span>
+                  </div>
+                  <div class="slider-container">
+                    <input type="range" id="sliderX2" min="-2" max="2" step="0.1" value="-0.5" oninput="updateNeuronSim()">
+                    <input type="range" id="sliderW2" min="-3" max="3" step="0.1" value="2.0" oninput="updateNeuronSim()">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="form-label" style="display:flex; justify-content:space-between;">
+                    <span>Entrada x3: <strong id="valX3">1.20</strong></span>
+                    <span>Peso w3: <strong id="valW3">-1.20</strong></span>
+                  </div>
+                  <div class="slider-container">
+                    <input type="range" id="sliderX3" min="-2" max="2" step="0.1" value="1.2" oninput="updateNeuronSim()">
+                    <input type="range" id="sliderW3" min="-3" max="3" step="0.1" value="-1.2" oninput="updateNeuronSim()">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="form-label" style="display:flex; justify-content:space-between;">
+                    <span>Sesgo (Bias b): <strong id="valBias">-0.30</strong></span>
+                  </div>
+                  <div class="slider-container">
+                    <input type="range" id="sliderBias" min="-3" max="3" step="0.1" value="-0.3" oninput="updateNeuronSim()">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Función de Activación g(z):</label>
+                  <select id="simActivation" class="form-control" onchange="updateNeuronSim()">
+                    <option value="relu">ReLU (Rectified Linear Unit) -> max(0, z)</option>
+                    <option value="sigmoid" selected>Sigmoide -> 1 / (1 + e^-z)</option>
+                    <option value="tanh">Tangente Hiperbólica -> tanh(z)</option>
+                    <option value="linear">Lineal -> z</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Visualization of the Neuron -->
+            <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+              <div>
+                <h3 class="card-title">Cálculo Matemático y Disparo de la Neurona</h3>
+                <p class="card-subtitle">Ecuación fundamental del Perceptrón Artificial</p>
+
+                <div class="math-block" id="neuronFormulaDisplay">
+                  z = (0.80 * 1.50) + (-0.50 * 2.00) + (1.20 * -1.20) + (-0.30) = -1.54
+                </div>
+
+                <div style="background:var(--bg-secondary); border-radius:var(--radius-md); padding:20px; text-align:center; border:1px solid var(--border-color); margin:16px 0;">
+                  <div style="font-size:12px; color:var(--text-muted); text-transform:uppercase;">Salida Activada y = g(z)</div>
+                  <div style="font-size:36px; font-weight:800; color:var(--accent-emerald);" id="neuronOutputVal">0.1765</div>
+                  <div style="font-size:12px; color:var(--text-dim);" id="neuronActivationText">Función Sigmoide comprimida en intervalo (0, 1)</div>
+                </div>
+
+                <!-- SVG Interactive diagram -->
+                <svg id="neuronSvg" width="100%" height="140" viewBox="0 0 400 140" style="background:rgba(0,0,0,0.2); border-radius:var(--radius-sm);">
+                  <!-- Inputs to Sum -->
+                  <circle cx="40" cy="30" r="14" fill="#334155" stroke="#38bdf8" stroke-width="2"/>
+                  <text x="40" y="34" fill="#fff" font-size="10" text-anchor="middle">x1</text>
+                  <line x1="54" y1="30" x2="150" y2="70" stroke="#38bdf8" stroke-width="2"/>
+
+                  <circle cx="40" cy="70" r="14" fill="#334155" stroke="#38bdf8" stroke-width="2"/>
+                  <text x="40" y="74" fill="#fff" font-size="10" text-anchor="middle">x2</text>
+                  <line x1="54" y1="70" x2="150" y2="70" stroke="#38bdf8" stroke-width="2"/>
+
+                  <circle cx="40" cy="110" r="14" fill="#334155" stroke="#38bdf8" stroke-width="2"/>
+                  <text x="40" y="114" fill="#fff" font-size="10" text-anchor="middle">x3</text>
+                  <line x1="54" y1="110" x2="150" y2="70" stroke="#38bdf8" stroke-width="2"/>
+
+                  <!-- Summation Node -->
+                  <circle cx="170" cy="70" r="22" fill="#1e293b" stroke="#06b6d4" stroke-width="3"/>
+                  <text x="170" y="75" fill="#06b6d4" font-size="16" font-weight="bold" text-anchor="middle">∑</text>
+
+                  <!-- Activation Node -->
+                  <line x1="192" y1="70" x2="250" y2="70" stroke="#a5b4fc" stroke-width="3"/>
+                  <circle cx="270" cy="70" r="22" fill="#1e293b" stroke="#8b5cf6" stroke-width="3"/>
+                  <text x="270" y="75" fill="#a5b4fc" font-size="14" font-weight="bold" text-anchor="middle">f(z)</text>
+
+                  <!-- Output -->
+                  <line x1="292" y1="70" x2="350" y2="70" stroke="#10b981" stroke-width="3" marker-end="url(#arrow)"/>
+                  <circle cx="365" cy="70" r="16" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+                  <text x="365" y="74" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">y</text>
+                </svg>
+              </div>
+
+              <div style="font-size:11px; color:var(--text-dim); margin-top:8px;">
+                Conexión didáctica Semana 11: Los pesos representan la fuerza de la sinapsis biológica; el sesgo permite desplazar el umbral de activación independientemente de las entradas.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Funciones de Activación -->
+        <div id="fund-tab-activations" style="display:none;">
+          <div class="grid-4">
+            <div class="card">
+              <h4 style="color:var(--accent-cyan)">ReLU</h4>
+              <p style="font-size:12px; color:var(--text-muted); margin:4px 0 10px;">f(x) = max(0, x)</p>
+              <div style="font-size:12px; color:var(--text-main);">
+                Estándar de la industria en capas ocultas. Evita la desaparición del gradiente y acelera el entrenamiento.
+              </div>
+            </div>
+            <div class="card">
+              <h4 style="color:var(--accent-emerald)">Sigmoide</h4>
+              <p style="font-size:12px; color:var(--text-muted); margin:4px 0 10px;">σ(x) = 1 / (1 + e^-x)</p>
+              <div style="font-size:12px; color:var(--text-main);">
+                Comprime la salida entre 0 y 1. Ideal para la capa de salida en <strong>Clasificación Binaria</strong>.
+              </div>
+            </div>
+            <div class="card">
+              <h4 style="color:var(--accent-indigo)">Softmax</h4>
+              <p style="font-size:12px; color:var(--text-muted); margin:4px 0 10px;">σ(z_i) = e^z_i / ∑ e^z_j</p>
+              <div style="font-size:12px; color:var(--text-main);">
+                Genera distribución de probabilidad multiclase que suma exactamente 1.0 (100%).
+              </div>
+            </div>
+            <div class="card">
+              <h4 style="color:var(--accent-purple)">Tanh</h4>
+              <p style="font-size:12px; color:var(--text-muted); margin:4px 0 10px;">tanh(x) = (e^x - e^-x)/(e^x + e^-x)</p>
+              <div style="font-size:12px; color:var(--text-main);">
+                Salida centrada en cero en el rango (-1, 1). Excelente para normalizar señales centradas.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Familias de Redes -->
+        <div id="fund-tab-families" style="display:none;">
+          <div class="grid-2">
+            <div class="card">
+              <h4 style="color:var(--accent-cyan); display:flex; justify-content:space-between;">
+                <span>Feedforward (MLP - Multilayer Perceptron)</span>
+                <span class="badge" style="background:#0284c7; color:#fff;">Tablas CSV</span>
+              </h4>
+              <p style="font-size:12px; color:var(--text-muted); margin:6px 0;">El flujo de información es estrictamente unidireccional, desde la capa de entrada hasta la salida.</p>
+              <ul style="font-size:12px; padding-left:18px; margin-top:8px; line-height:1.7;">
+                <li><strong>Casos de uso:</strong> Datos estructurados, scoring de crédito, predicción clínica, fraudes.</li>
+                <li><strong>Capas típicas:</strong> Dense, Dropout, BatchNormalization.</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h4 style="color:var(--accent-emerald); display:flex; justify-content:space-between;">
+                <span>Convolucional (CNN)</span>
+                <span class="badge" style="background:#059669; color:#fff;">Imágenes / Espacial</span>
+              </h4>
+              <p style="font-size:12px; color:var(--text-muted); margin:6px 0;">Utiliza filtros de convolución y pooling para extraer mapas de características locales e invariantes a traslación.</p>
+              <ul style="font-size:12px; padding-left:18px; margin-top:8px; line-height:1.7;">
+                <li><strong>Casos de uso:</strong> Visión computacional, clasificación médica por rayos X, detección de objetos.</li>
+                <li><strong>Capas típicas:</strong> Conv2D, MaxPooling2D, Flatten, Dense.</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h4 style="color:var(--accent-purple); display:flex; justify-content:space-between;">
+                <span>Recurrente (RNN / LSTM)</span>
+                <span class="badge" style="background:#7c3aed; color:#fff;">Secuencias / Tiempo</span>
+              </h4>
+              <p style="font-size:12px; color:var(--text-muted); margin:6px 0;">Posee bucles de retroalimentación interna que permiten recordar estados previos a lo largo de pasos de tiempo.</p>
+              <ul style="font-size:12px; padding-left:18px; margin-top:8px; line-height:1.7;">
+                <li><strong>Casos de uso:</strong> Series de tiempo financieras, pronóstico de demanda, procesamiento de lenguaje (NLP).</li>
+                <li><strong>Capas típicas:</strong> SimpleRNN, LSTM, GRU, Dense.</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h4 style="color:var(--accent-rose); display:flex; justify-content:space-between;">
+                <span>Generativa Adversaria (GAN)</span>
+                <span class="badge" style="background:#e11d48; color:#fff;">Generación Creativa</span>
+              </h4>
+              <p style="font-size:12px; color:var(--text-muted); margin:6px 0;">Dos redes en competencia mutua en un juego de suma cero: el Generador crea muestras sintéticas y el Discriminador detecta si son reales o falsas.</p>
+              <ul style="font-size:12px; padding-left:18px; margin-top:8px; line-height:1.7;">
+                <li><strong>Casos de uso:</strong> Síntesis de imágenes realistas, aumento de datos, deepfakes controlados.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Glosario Semana 11 -->
+        <div id="fund-tab-glossary" style="display:none;">
+          <div class="card">
+            <h3 class="card-title">Glosario de Términos Clave de Aprendizaje Profundo</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+              <div style="padding:12px; background:var(--bg-secondary); border-radius:var(--radius-sm);">
+                <strong style="color:var(--accent-cyan)">Época (Epoch):</strong>
+                <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Un ciclo completo en el que la totalidad del conjunto de datos de entrenamiento pasa hacia adelante y hacia atrás a través de la red neuronal.</p>
+              </div>
+              <div style="padding:12px; background:var(--bg-secondary); border-radius:var(--radius-sm);">
+                <strong style="color:var(--accent-cyan)">Batch Size (Tamaño de Lote):</strong>
+                <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Número de ejemplos de entrenamiento procesados antes de actualizar los pesos de la red mediante gradiente descendente.</p>
+              </div>
+              <div style="padding:12px; background:var(--bg-secondary); border-radius:var(--radius-sm);">
+                <strong style="color:var(--accent-cyan)">Learning Rate (Tasa de Aprendizaje):</strong>
+                <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Hiperparámetro que determina el tamaño de los pasos con los que el optimizador se mueve hacia el mínimo de la función de pérdida.</p>
+              </div>
+              <div style="padding:12px; background:var(--bg-secondary); border-radius:var(--radius-sm);">
+                <strong style="color:var(--accent-cyan)">Backpropagation (Retropropagación):</strong>
+                <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Algoritmo que calcula el gradiente del error con respecto a cada peso mediante la regla de la cadena para optimizar la red.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================== -->
+      <!-- M04: DISEÑADOR DE ARQUITECTURAS            -->
+      <!-- ========================================== -->
+      <section id="m04-architectures" class="module-pane">
+        <div class="grid-2">
+          <!-- Architecture Layers Editor -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Configuración de Capas Neuronales</h3>
+                <p class="card-subtitle">Paso 3: Construye y valida la topología adaptada al dataset</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="addLayerToArch()">+ Añadir Capa</button>
+            </div>
+
+            <div class="grid-2" style="margin-bottom:12px;">
+              <div>
+                <label class="form-label">Nombre de la Arquitectura:</label>
+                <input type="text" id="archNameInput" class="form-control" value="MLP-Enterprise-V1">
+              </div>
+              <div>
+                <label class="form-label">Familia:</label>
+                <select id="archFamilySelect" class="form-control" onchange="onArchFamilyChange()">
+                  <option value="Feedforward" selected>Feedforward (MLP)</option>
+                  <option value="CNN">Convolucional (CNN)</option>
+                  <option value="RNN">Recurrente (RNN)</option>
+                  <option value="GAN">Generativa (GAN)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="padding:8px 12px; background:rgba(2,132,199,0.1); border-radius:var(--radius-sm); border:1px solid rgba(2,132,199,0.3); font-size:12px; margin-bottom:14px; display:flex; justify-content:space-between;">
+              <span><strong>Capa de Entrada:</strong> <span id="archInputShapeBadge">8 características (input_shape=[8])</span></span>
+              <span><strong>Capa de Salida:</strong> <span id="archOutputShapeBadge">1 unidad (Sigmoid)</span></span>
+            </div>
+
+            <!-- Layers List -->
+            <div id="archLayersList" style="display:flex; flex-direction:column; gap:8px; max-height:280px; overflow-y:auto; padding-right:4px;">
+              <!-- Populated dynamically -->
+            </div>
+
+            <div style="margin-top:16px; display:flex; justify-content:space-between; align-items:center;">
+              <div style="font-size:12px; color:var(--text-muted)">
+                Parámetros Totales: <strong style="color:white;" id="archTotalParams">289</strong>
+              </div>
+              <button class="btn btn-primary" onclick="saveArchitecture()">Guardar Arquitectura</button>
+            </div>
+          </div>
+
+          <!-- Topology Graph & Python TensorFlow Code -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Grafo de Conexiones & Código Keras</h3>
+                <p class="card-subtitle">Visualización interactiva y exportación a Python/TensorFlow</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="copyKerasCode()">Copiar Código</button>
+            </div>
+
+            <div class="graph-canvas" id="archTopologyCanvas">
+              <!-- SVG Architecture Visualizer generated by JS -->
+            </div>
+
+            <div style="margin-top:14px;">
+              <div style="font-size:12px; font-weight:600; color:var(--text-muted); margin-bottom:6px;">Código Equivalente en TensorFlow / Keras (API Python):</div>
+              <pre class="code-preview" id="kerasCodePreview"># Código generado automáticamente</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================== -->
+      <!-- M05: DATASETS (GESTIÓN DE DATOS & EDA)     -->
+      <!-- ========================================== -->
+      <section id="m05-datasets" class="module-pane">
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Gestión de Datasets & Análisis Exploratorio (EDA)</h2>
+              <p class="card-subtitle">¡Componente Primario y Fundamental! Condiciona de forma rígida el input_shape y output_shape</p>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleCsvUpload(event)">
+              <button class="btn btn-secondary" onclick="document.getElementById('csvFileInput').click()">📁 Cargar CSV Propio</button>
+              <button class="btn btn-primary" onclick="loadSampleDataset('arrhythmia')">Cargar Dataset Demo (Cardiopatía)</button>
+            </div>
+          </div>
+
+          <!-- Dataset Selector Library -->
+          <div style="display:flex; gap:8px; margin-bottom:16px; overflow-x:auto; padding-bottom:6px;">
+            <button class="btn btn-sm btn-secondary active" onclick="loadSampleDataset('arrhythmia')">1. Cardiopatía ECG (8 feat, Binario)</button>
+            <button class="btn btn-sm btn-secondary" onclick="loadSampleDataset('iris')">2. Iris Flowers (4 feat, Multiclase)</button>
+            <button class="btn btn-sm btn-secondary" onclick="loadSampleDataset('housing')">3. California Housing (6 feat, Regresión)</button>
+            <button class="btn btn-sm btn-secondary" onclick="loadSampleDataset('churn')">4. Customer Churn (7 feat, Binario)</button>
+          </div>
+
+          <!-- Metadata & Automated EDA Summary -->
+          <div class="grid-4" style="margin-bottom:16px;">
+            <div class="stat-card">
+              <div class="stat-label">Total de Filas</div>
+              <div class="stat-value" id="dsTotalRows">750</div>
+              <div class="stat-detail">Datos preprocesados</div>
+            </div>
+            <div class="stat-card emerald">
+              <div class="stat-label">Input Shape (Features)</div>
+              <div class="stat-value" id="dsInputShape">8</div>
+              <div class="stat-detail">Variables independientes</div>
+            </div>
+            <div class="stat-card indigo">
+              <div class="stat-label">Variable Objetivo</div>
+              <div class="stat-value" style="font-size:18px;" id="dsTargetCol">has_arrhythmia</div>
+              <div class="stat-detail">Salida supervisada</div>
+            </div>
+            <div class="stat-card amber">
+              <div class="stat-label">Partición Automática</div>
+              <div class="stat-value" style="font-size:16px;" id="dsSplitSummary">70% / 15% / 15%</div>
+              <div class="stat-detail">Train: 525 | Val: 112 | Test: 113</div>
+            </div>
+          </div>
+
+          <!-- EDA Statistics Table -->
+          <div class="card-header" style="margin-top:10px;">
+            <h3 class="card-title">Resumen Estadístico de Columnas (EDA Automático)</h3>
+            <span class="status-badge status-completed">Valores Nulos Imputados: 0</span>
+          </div>
+
+          <div class="table-container" style="max-height:220px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Columna</th>
+                  <th>Tipo</th>
+                  <th>Mínimo</th>
+                  <th>Máximo</th>
+                  <th>Media (Mean)</th>
+                  <th>Desv. Estándar</th>
+                  <th>Nulos</th>
+                </tr>
+              </thead>
+              <tbody id="dsEdaTableBody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================== -->
+      <!-- M06: ENTRENAMIENTOS (CONSOLA DE EJECUCIÓN) -->
+      <!-- ========================================== -->
+      <section id="m06-training" class="module-pane">
+        <div class="grid-2">
+          <!-- Training Setup -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Consola de Hiperparámetros de Entrenamiento</h3>
+                <p class="card-subtitle">Paso 4: Vincula Dataset + Arquitectura y ejecuta el aprendizaje</p>
+              </div>
+              <span class="status-badge status-queued" id="trainingStateBadge">ESTADO: LISTO</span>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Dataset Activo:</label>
+                <select id="trainDatasetSelect" class="form-control" disabled>
+                  <option>Arrhythmia_ECG_Cleaned.csv (8 features)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Arquitectura Activa:</label>
+                <select id="trainArchSelect" class="form-control">
+                  <option value="MLP-Enterprise-V1">MLP-Enterprise-V1 (Feedforward, 289 params)</option>
+                  <option value="MLP-Deep-V2">MLP-Deep-V2 (Feedforward, 680 params)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Número de Épocas (Epochs):</label>
+                <input type="number" id="trainEpochsInput" class="form-control" value="25" min="5" max="100">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tamaño de Lote (Batch Size):</label>
+                <select id="trainBatchSize" class="form-control">
+                  <option value="8">8 muestras</option>
+                  <option value="16" selected>16 muestras</option>
+                  <option value="32">32 muestras</option>
+                  <option value="64">64 muestras</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Optimizador:</label>
+                <select id="trainOptimizer" class="form-control">
+                  <option value="Adam" selected>Adam (Adaptive Moment Estimation)</option>
+                  <option value="SGD">SGD con Momentum</option>
+                  <option value="RMSprop">RMSprop</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tasa de Aprendizaje (Learning Rate):</label>
+                <input type="number" id="trainLearningRate" class="form-control" value="0.005" step="0.001" min="0.0001">
+              </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div style="display:flex; gap:12px; margin-top:20px;">
+              <button class="btn btn-success" id="btnStartTraining" onclick="startSimulatedTraining()" style="flex:1;">
+                ▶ Iniciar Entrenamiento
+              </button>
+              <button class="btn btn-danger" id="btnCancelTraining" onclick="cancelTraining()" disabled>
+                ⏹ Cancelar Cooperativamente
+              </button>
+            </div>
+          </div>
+
+          <!-- Real-Time Training Telemetry & Logs -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Telemetría en Vivo de Épocas</h3>
+                <p class="card-subtitle">Transmisión de métricas sin recargar la pantalla</p>
+              </div>
+              <div style="font-size:12px; color:var(--accent-cyan); font-weight:600;" id="trainEpochCounter">Época: 0 / 25</div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+                <span>Progreso del Trabajo:</span>
+                <span id="trainProgressPercent" style="font-weight:700;">0%</span>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="trainProgressBar" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="grid-4" style="margin-top:14px; margin-bottom:14px;">
+              <div style="background:var(--bg-secondary); padding:8px; border-radius:var(--radius-sm); text-align:center;">
+                <div style="font-size:10px; color:var(--text-muted)">Loss (Entr)</div>
+                <div style="font-size:14px; font-weight:700; color:var(--accent-rose);" id="liveTrainLoss">--</div>
+              </div>
+              <div style="background:var(--bg-secondary); padding:8px; border-radius:var(--radius-sm); text-align:center;">
+                <div style="font-size:10px; color:var(--text-muted)">Val Loss</div>
+                <div style="font-size:14px; font-weight:700; color:var(--accent-amber);" id="liveValLoss">--</div>
+              </div>
+              <div style="background:var(--bg-secondary); padding:8px; border-radius:var(--radius-sm); text-align:center;">
+                <div style="font-size:10px; color:var(--text-muted)">Accuracy</div>
+                <div style="font-size:14px; font-weight:700; color:var(--accent-cyan);" id="liveTrainAcc">--</div>
+              </div>
+              <div style="background:var(--bg-secondary); padding:8px; border-radius:var(--radius-sm); text-align:center;">
+                <div style="font-size:10px; color:var(--text-muted)">Val Acc</div>
+                <div style="font-size:14px; font-weight:700; color:var(--accent-emerald);" id="liveValAcc">--</div>
+              </div>
+            </div>
+
+            <div style="font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">Registro de Consola (Worker Logs):</div>
+            <div class="code-preview" id="trainingLogsBox" style="height:120px; font-size:11px;">
+[Worker Engine] Esperando orden de inicio de trabajo...
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================== -->
+      <!-- M07: EVALUACIÓN Y MÉTRICAS (TIEMPO REAL)   -->
+      <!-- ========================================== -->
+      <section id="m07-evaluation" class="module-pane">
+        <div class="grid-2">
+          <!-- Charts: Loss & Accuracy -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Curvas de Aprendizaje (Loss & Accuracy)</h3>
+                <p class="card-subtitle">Paso 5: Visualización de convergencia y verificación de overfitting</p>
+              </div>
+              <span class="badge" style="background:rgba(6,182,212,0.2); color:#38bdf8;">Época a Época</span>
+            </div>
+
+            <!-- SVG Line Chart Canvas -->
+            <svg id="learningCurveSvg" width="100%" height="220" viewBox="0 0 500 220" style="background:var(--bg-secondary); border-radius:var(--radius-md); border:1px solid var(--border-color); transition: background-color 0.25s ease;">
+              <!-- Grid lines -->
+              <line x1="40" y1="20" x2="480" y2="20" stroke="var(--border-color)" stroke-width="1"/>
+              <line x1="40" y1="70" x2="480" y2="70" stroke="var(--border-color)" stroke-width="1"/>
+              <line x1="40" y1="120" x2="480" y2="120" stroke="var(--border-color)" stroke-width="1"/>
+              <line x1="40" y1="170" x2="480" y2="170" stroke="var(--border-color)" stroke-width="1"/>
+              <!-- Axis labels -->
+              <text x="30" y="24" fill="#64748b" font-size="10" text-anchor="end">1.0</text>
+              <text x="30" y="124" fill="#64748b" font-size="10" text-anchor="end">0.5</text>
+              <text x="30" y="174" fill="#64748b" font-size="10" text-anchor="end">0.0</text>
+              <!-- Polyline Paths for Loss and Acc -->
+              <path id="pathTrainLoss" fill="none" stroke="#f43f5e" stroke-width="2.5" d="M 40 40"/>
+              <path id="pathValLoss" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4" d="M 40 45"/>
+              <path id="pathTrainAcc" fill="none" stroke="#06b6d4" stroke-width="2.5" d="M 40 160"/>
+              <path id="pathValAcc" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="4" d="M 40 165"/>
+            </svg>
+
+            <div style="display:flex; justify-content:center; gap:20px; font-size:11px; margin-top:10px;">
+              <span style="color:#f43f5e; font-weight:600;">― Train Loss</span>
+              <span style="color:#f59e0b; font-weight:600;">┄ Val Loss</span>
+              <span style="color:#06b6d4; font-weight:600;">― Train Accuracy</span>
+              <span style="color:#10b981; font-weight:600;">┄ Val Accuracy</span>
+            </div>
+          </div>
+
+          <!-- Test Set Evaluation & Confusion Matrix -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Evaluación en Subconjunto de Prueba (Test Set)</h3>
+                <p class="card-subtitle">Métricas imparciales sobre 113 muestras retenidas (15%)</p>
+              </div>
+              <span class="status-badge status-completed">Evaluación Imparcial</span>
+            </div>
+
+            <div class="grid-3" style="margin-bottom:12px;">
+              <div style="background:var(--bg-secondary); padding:10px; border-radius:var(--radius-sm); text-align:center;">
+                <div style="font-size:11px; color:var(--text-muted)">Test Accuracy</div>
+                <div style="font-size:20px; font-weight:800; color:var(--accent-emerald);" id="evalTestAcc">95.6%</div>
+              </div>
+              <div style="background:var(--bg-secondary); padding:10px; border-radius:var(--radius-sm); text-align:center;">
+                <div style="font-size:11px; color:var(--text-muted)">Precision</div>
+                <div style="font-size:20px; font-weight:800; color:var(--accent-cyan);" id="evalPrecision">96.2%</div>
+              </div>
+              <div style="background:var(--bg-secondary); padding:10px; border-radius:var(--radius-sm); text-align:center;">
+                <div style="font-size:11px; color:var(--text-muted)">Recall (Sensibilidad)</div>
+                <div style="font-size:20px; font-weight:800; color:var(--accent-indigo);" id="evalRecall">94.8%</div>
+              </div>
+            </div>
+
+            <!-- Interactive Confusion Matrix -->
+            <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-align:center; margin-top:8px;">
+              Matriz de Confusión (N = 113 pacientes de prueba)
+            </div>
+
+            <div class="confusion-grid">
+              <div></div>
+              <div style="font-size:11px; font-weight:600; color:var(--text-muted);">Pred: SANO</div>
+              <div style="font-size:11px; font-weight:600; color:var(--text-muted);">Pred: ARRITMIA</div>
+
+              <div style="font-size:11px; font-weight:600; color:var(--text-muted); display:flex; align-items:center;">Real: SANO</div>
+              <div class="matrix-cell matrix-tn">
+                <span style="font-size:18px;" id="matrixTN">58</span>
+                <span style="font-size:10px;">Verdadero Neg (TN)</span>
+              </div>
+              <div class="matrix-cell matrix-fp">
+                <span style="font-size:18px;" id="matrixFP">2</span>
+                <span style="font-size:10px;">Falso Pos (FP)</span>
+              </div>
+
+              <div style="font-size:11px; font-weight:600; color:var(--text-muted); display:flex; align-items:center;">Real: ARRITMIA</div>
+              <div class="matrix-cell matrix-fn">
+                <span style="font-size:18px;" id="matrixFN">3</span>
+                <span style="font-size:10px;">Falso Neg (FN)</span>
+              </div>
+              <div class="matrix-cell matrix-tp">
+                <span style="font-size:18px;" id="matrixTP">50</span>
+                <span style="font-size:10px;">Verdadero Pos (TP)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Inference Simulator -->
+        <div class="card" style="margin-top:20px;">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Módulo de Inferencia en Tiempo Real (Probar Predicciones)</h3>
+              <p class="card-subtitle">Introduce parámetros de un paciente para evaluar la respuesta de la red neuronal</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="randomizeInferenceSample()">Muestra Aleatoria</button>
+          </div>
+
+          <div class="grid-4">
+            <div>
+              <label class="form-label">Ritmo Cardíaco (bpm): <strong id="infValHR">76</strong></label>
+              <input type="range" id="infSliderHR" min="45" max="150" value="76" oninput="runLiveInference()">
+            </div>
+            <div>
+              <label class="form-label">Intervalo PR (ms): <strong id="infValPR">165</strong></label>
+              <input type="range" id="infSliderPR" min="100" max="250" value="165" oninput="runLiveInference()">
+            </div>
+            <div>
+              <label class="form-label">Elevación ST (mm): <strong id="infValST">0.2</strong></label>
+              <input type="range" id="infSliderST" min="0" max="5" step="0.1" value="0.2" oninput="runLiveInference()">
+            </div>
+            <div>
+              <label class="form-label">Edad del Paciente: <strong id="infValAge">58</strong></label>
+              <input type="range" id="infSliderAge" min="18" max="90" value="58" oninput="runLiveInference()">
+            </div>
+          </div>
+
+          <div style="margin-top:16px; padding:16px; background:var(--bg-secondary); border-radius:var(--radius-md); border:1px solid var(--border-color); display:flex; align-items:center; justify-content:space-between; transition: background-color 0.25s ease;">
+            <div>
+              <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Predicción del Modelo Neural</div>
+              <div style="font-size:22px; font-weight:800;" id="inferencePredictionLabel">PATRÓN CARDÍACO NORMAL (SANO)</div>
+              <div style="font-size:12px; color:var(--text-dim);" id="inferenceScoreDesc">Probabilidad estimada de arritmia: 4.8%</div>
+            </div>
+            <div style="width:200px;">
+              <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
+                <span>Confianza:</span>
+                <span id="inferenceConfidencePct" style="font-weight:700; color:var(--accent-emerald);">95.2%</span>
+              </div>
+              <div class="progress-bar-container"><div id="inferenceConfidenceBar" class="progress-bar-fill" style="width: 95.2%; background:var(--accent-emerald);"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================== -->
+      <!-- M08: REGISTRO DE MODELOS (MODEL REGISTRY)  -->
+      <!-- ========================================== -->
+      <section id="m08-models" class="module-pane">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Catálogo Centralizado de Modelos (Model Registry)</h2>
+              <p class="card-subtitle">Paso 6: Versionado inmutable, trazabilidad criptográfica y ciclo de vida de producción</p>
+            </div>
+            <button class="btn btn-primary" onclick="publishCurrentModelVersion()">+ Registrar Versión de Modelo</button>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre del Modelo</th>
+                  <th>Versión</th>
+                  <th>Checksum SHA-256</th>
+                  <th>Precisión (Test)</th>
+                  <th>Pérdida (Loss)</th>
+                  <th>Ciclo de Vida</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="modelsTableBody">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================== -->
+      <!-- M09: REPORTES & EXPORTACIÓN PDF            -->
+      <!-- ========================================== -->
+      <section id="m09-reports" class="module-pane">
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Generador de Reportes Técnicos y Ficha de Proyecto</h2>
+              <p class="card-subtitle">Exportación formal para presentación académica, comités de calidad o auditoría</p>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-secondary" onclick="exportMetricsCsv()">📥 Exportar Historial en CSV</button>
+              <button class="btn btn-primary" onclick="printOrExportPdf()">📄 Exportar Informe Formal en PDF</button>
+            </div>
+          </div>
+
+          <!-- Printable Formal Report Sheet Preview -->
+          <div id="printableReportSheet" style="background:#ffffff; color:#0f172a; padding:32px; border-radius:var(--radius-md); box-shadow:var(--shadow-md); max-width:850px; margin:0 auto; font-family:'Inter', sans-serif;">
+            <!-- Header -->
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #0284c7; padding-bottom:16px; margin-bottom:20px;">
+              <div>
+                <h1 style="font-size:20px; font-weight:800; color:#0f172a; margin-bottom:4px;">NEUROLAB ENTERPRISE</h1>
+                <p style="font-size:12px; color:#475569; font-weight:600;">FICHA TÉCNICA Y AUDITORÍA DE RED NEURONAL ARTIFICIAL</p>
+                <p style="font-size:11px; color:#64748b;">Aplicación práctica de las operaciones de la Semana 11</p>
+              </div>
+              <div style="text-align:right; font-size:11px; color:#64748b;">
+                <div><strong>Fecha:</strong> <span id="reportDate">17/11/2026</span></div>
+                <div><strong>Versión:</strong> v1.0.0-PROD</div>
+                <div><strong>Responsable:</strong> Dr. Alex Vance</div>
+              </div>
+            </div>
+
+            <!-- Project & Dataset Specs -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; font-size:12px;">
+              <div style="background:#f8fafc; padding:12px; border-radius:6px; border:1px solid #e2e8f0;">
+                <div style="font-weight:700; color:#0284c7; margin-bottom:6px;">1. IDENTIFICACIÓN DEL PROYECTO</div>
+                <div><strong>Proyecto:</strong> Detección de Arritmias Cardíacas (MLP)</div>
+                <div><strong>Problema:</strong> Clasificación Binaria de Patologías ECG</div>
+                <div><strong>Familia de Red:</strong> Feedforward (Perceptrón Multicapa)</div>
+              </div>
+              <div style="background:#f8fafc; padding:12px; border-radius:6px; border:1px solid #e2e8f0;">
+                <div style="font-weight:700; color:#0284c7; margin-bottom:6px;">2. METADATOS DEL DATASET</div>
+                <div><strong>Dataset:</strong> Arrhythmia_ECG_Cleaned.csv (750 registros)</div>
+                <div><strong>Entradas (Input Shape):</strong> 8 variables independientes</div>
+                <div><strong>Partición:</strong> Train 70% (525) | Val 15% (112) | Test 15% (113)</div>
+              </div>
+            </div>
+
+            <!-- Architecture Breakdown -->
+            <div style="background:#f8fafc; padding:12px; border-radius:6px; border:1px solid #e2e8f0; margin-bottom:20px; font-size:12px;">
+              <div style="font-weight:700; color:#0284c7; margin-bottom:6px;">3. RESUMEN DE ARQUITECTURA NEURONAL</div>
+              <table style="width:100%; border-collapse:collapse; font-size:11px; margin-top:6px;">
+                <thead>
+                  <tr style="background:#e2e8f0; color:#1e293b;">
+                    <th style="padding:6px; text-align:left;">Capa</th>
+                    <th style="padding:6px; text-align:left;">Tipo</th>
+                    <th style="padding:6px; text-align:left;">Unidades</th>
+                    <th style="padding:6px; text-align:left;">Activación</th>
+                    <th style="padding:6px; text-align:right;">Parámetros</th>
+                  </tr>
+                </thead>
+                <tbody style="color:#334155;">
+                  <tr><td style="padding:6px;">1</td><td>Dense (Oculta 1)</td><td>16</td><td>ReLU</td><td style="text-align:right;">144</td></tr>
+                  <tr><td style="padding:6px;">2</td><td>Dropout (0.2)</td><td>--</td><td>--</td><td style="text-align:right;">0</td></tr>
+                  <tr><td style="padding:6px;">3</td><td>Dense (Oculta 2)</td><td>8</td><td>ReLU</td><td style="text-align:right;">136</td></tr>
+                  <tr><td style="padding:6px;">4</td><td>Dense (Salida)</td><td>1</td><td>Sigmoid</td><td style="text-align:right;">9</td></tr>
+                </tbody>
+              </table>
+              <div style="margin-top:8px; text-align:right; font-weight:700; color:#0f172a;">Total Parámetros Entrenables: 289</div>
+            </div>
+
+            <!-- Performance Metrics on Isolated Test Set -->
+            <div style="background:#f8fafc; padding:12px; border-radius:6px; border:1px solid #e2e8f0; margin-bottom:20px; font-size:12px;">
+              <div style="font-weight:700; color:#0284c7; margin-bottom:6px;">4. EVALUACIÓN Y RENDIMIENTO (TEST SET RETENIDO)</div>
+              <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; text-align:center; margin-top:8px;">
+                <div style="padding:8px; background:#fff; border:1px solid #cbd5e1; border-radius:4px;">
+                  <div style="font-size:10px; color:#64748b;">Test Accuracy</div>
+                  <div style="font-size:16px; font-weight:800; color:#059669;">95.6%</div>
+                </div>
+                <div style="padding:8px; background:#fff; border:1px solid #cbd5e1; border-radius:4px;">
+                  <div style="font-size:10px; color:#64748b;">Precision</div>
+                  <div style="font-size:16px; font-weight:800; color:#0284c7;">96.2%</div>
+                </div>
+                <div style="padding:8px; background:#fff; border:1px solid #cbd5e1; border-radius:4px;">
+                  <div style="font-size:10px; color:#64748b;">Recall</div>
+                  <div style="font-size:16px; font-weight:800; color:#6366f1;">94.8%</div>
+                </div>
+                <div style="padding:8px; background:#fff; border:1px solid #cbd5e1; border-radius:4px;">
+                  <div style="font-size:10px; color:#64748b;">F1-Score</div>
+                  <div style="font-size:16px; font-weight:800; color:#d97706;">95.5%</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Signatures / Footer -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:30px; font-size:11px; color:#475569;">
+              <div style="border-top:1px solid #cbd5e1; padding-top:6px; text-align:center;">
+                <strong>Dr. Alex Vance</strong><br>
+                Ingeniero Líder de IA & Arquitecto de Modelos
+              </div>
+              <div style="border-top:1px solid #cbd5e1; padding-top:6px; text-align:center;">
+                <strong>Dra. Elena Ramos</strong><br>
+                Revisora de Calidad & Aprobación en Model Registry
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================== -->
+      <!-- M10: ADMINISTRACIÓN & AUDITORÍA RBAC       -->
+      <!-- ========================================== -->
+      <section id="m10-admin" class="module-pane">
+        <div class="grid-2">
+          <!-- Users and RBAC Roles -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Gobierno de Usuarios y Permisos RBAC</h3>
+                <p class="card-subtitle">Control de acceso basado en roles por proyecto y global</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="openNewUserModal()">+ Invitar Usuario</button>
+            </div>
+
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Rol Asignado</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-top:16px; padding:12px; background:rgba(2,132,199,0.1); border-radius:var(--radius-sm); font-size:12px;">
+              <strong>Matriz de Permisos RBAC:</strong>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; color:var(--text-muted);">
+                <div>• <strong>Admin:</strong> Configuración global y cuotas</div>
+                <div>• <strong>Responsable:</strong> Crear y asignar proyectos</div>
+                <div>• <strong>Ingeniero IA:</strong> Diseñar y entrenar redes</div>
+                <div>• <strong>Revisor:</strong> Aprobar modelos a producción</div>
+                <div>• <strong>Lector:</strong> Solo consulta de resultados</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Audit Logs (Audit Events) -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Registro de Auditoría de Acciones (Audit Trail)</h3>
+                <p class="card-subtitle">Trazabilidad completa e inmutable de eventos</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="clearAuditLogs()">Limpiar Vista</button>
+            </div>
+
+            <div style="max-height:360px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;" id="auditLogsContainer">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast">
+  <span id="toastIcon">ℹ️</span>
+  <span id="toastMsg">Mensaje de notificación</span>
+</div>
+
+<!-- Modal Dialog -->
+<div class="modal-backdrop" id="genericModal">
+  <div class="modal-content">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h3 style="font-size:16px; font-weight:700;" id="modalTitle">Nuevo Proyecto</h3>
+      <button onclick="closeModal()" style="background:none; border:none; color:var(--text-muted); font-size:18px; cursor:pointer;">✕</button>
+    </div>
+    <div id="modalBody">
+      <!-- Modal form injected dynamically -->
+    </div>
+  </div>
+</div>
+
+<!-- Application Logic -->
+<script>
+// ==========================================
+// STATE MANAGEMENT & DATA STORE
+// ==========================================
+const state = {
+  currentModule: 'm01-dashboard',
+  currentRole: 'Administrador',
+  demoStep: 1,
+  activeProject: {
+    id: 'proj_01',
+    name: 'Detección de Arritmias Cardíacas (MLP)',
+    problem: 'Clasificación Binaria',
+    family: 'Feedforward',
+    tags: ['Salud', 'Feedforward', 'Semana 11']
+  },
+  activeDataset: {
+    name: 'Arrhythmia_ECG_Cleaned.csv',
+    rows: 750,
+    inputShape: 8,
+    targetCol: 'has_arrhythmia',
+    splits: { train: 525, val: 112, test: 113 }
+  },
+  activeArchitecture: {
+    name: 'MLP-Enterprise-V1',
+    family: 'Feedforward',
+    layers: [
+      { id: 'l1', type: 'Dense', units: 16, activation: 'relu', params: 144 },
+      { id: 'l2', type: 'Dropout', rate: 0.2, params: 0 },
+      { id: 'l3', type: 'Dense', units: 8, activation: 'relu', params: 136 },
+      { id: 'l4', type: 'Dense', units: 1, activation: 'sigmoid', params: 9 }
+    ],
+    totalParams: 289
+  },
+  training: {
+    isTraining: false,
+    currentEpoch: 0,
+    totalEpochs: 25,
+    status: 'QUEUED', // QUEUED -> PREPARING -> RUNNING -> COMPLETED / CANCELLED
+    timerId: null,
+    metricsHistory: []
+  },
+  models: [
+    {
+      id: 'mod_01',
+      name: 'MLP-Arrhythmia-Production',
+      version: 'v1.0.0',
+      checksum: 'sha256:7f83b1657ff1fc53b92dc18148a1d65d',
+      testAcc: 95.6,
+      loss: 0.084,
+      status: 'Aprobado',
+      date: '17/11/2026'
+    },
+    {
+      id: 'mod_02',
+      name: 'CNN-ChestXRay-V1',
+      version: 'v0.9.4',
+      checksum: 'sha256:4b912a831e50f38c719e7284b3d84a1e',
+      testAcc: 92.4,
+      loss: 0.142,
+      status: 'En Revisión',
+      date: '16/11/2026'
+    },
+    {
+      id: 'mod_03',
+      name: 'LSTM-ECG-TimeSeries',
+      version: 'v0.5.1',
+      checksum: 'sha256:1a84f37bc4498e7208f8319f04ea291c',
+      testAcc: 88.9,
+      loss: 0.210,
+      status: 'Borrador',
+      date: '15/11/2026'
+    }
+  ],
+  auditLogs: [
+    { id: 'aud_1', actor: 'Dr. Alex Vance', action: 'PROJECT_CREATED', proj: 'Detección de Arritmias Cardíacas (MLP)', time: '09:00:15', meta: 'Workspace inicializado' },
+    { id: 'aud_2', actor: 'Dr. Alex Vance', action: 'DATASET_INGESTED', proj: 'Detección de Arritmias Cardíacas (MLP)', time: '09:05:22', meta: 'Arrhythmia_ECG_Cleaned.csv (750 filas, input_shape=8)' },
+    { id: 'aud_3', actor: 'Dr. Alex Vance', action: 'ARCHITECTURE_COMPILED', proj: 'Detección de Arritmias Cardíacas (MLP)', time: '09:12:40', meta: 'MLP-Enterprise-V1 validado con 289 parámetros' }
+  ],
+  users: [
+    { id: 'usr_1', name: 'Dr. Alex Vance', email: 'alex.vance@neurolab.enterprise', role: 'Administrador', status: 'Activo' },
+    { id: 'usr_2', name: 'Dra. Elena Ramos', email: 'elena.ramos@neurolab.enterprise', role: 'Revisor', status: 'Activo' },
+    { id: 'usr_3', name: 'Ing. Carlos Mendez', email: 'carlos.mendez@neurolab.enterprise', role: 'Ingeniero de IA', status: 'Activo' },
+    { id: 'usr_4', name: 'Lic. Sofia Vega', email: 'sofia.vega@neurolab.enterprise', role: 'Lector', status: 'Activo' }
+  ]
+};
+
+// ==========================================
+// NAVIGATION & MODULE SWITCHING
+// ==========================================
+function switchModule(moduleId, navEl) {
+  state.currentModule = moduleId;
+  
+  // Update sidebar active classes
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  if (navEl) {
+    navEl.classList.add('active');
+  } else {
+    // Find matching link
+    const targetLink = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick')?.includes(moduleId));
+    if (targetLink) targetLink.classList.add('active');
+  }
+
+  // Hide all sections, show target
+  document.querySelectorAll('.module-pane').forEach(el => el.classList.remove('active'));
+  const targetPane = document.getElementById(moduleId);
+  if (targetPane) targetPane.classList.add('active');
+
+  // Update Breadcrumbs
+  const names = {
+    'm01-dashboard': 'M01. Inicio / Dashboard',
+    'm02-projects': 'M02. Gestión de Proyectos de IA',
+    'm03-fundamentals': 'M03. Fundamentos Neuronales (Semana 11)',
+    'm04-architectures': 'M04. Diseñador de Arquitecturas',
+    'm05-datasets': 'M05. Datasets & Análisis EDA',
+    'm06-training': 'M06. Entrenamientos & Telemetría',
+    'm07-evaluation': 'M07. Evaluación & Métricas',
+    'm08-models': 'M08. Registro de Modelos',
+    'm09-reports': 'M09. Reportes & Exportación PDF',
+    'm10-admin': 'M10. Administración & Auditoría'
+  };
+  document.getElementById('breadcrumbModule').textContent = names[moduleId] || moduleId;
+
+  // Trigger relevant updates
+  if (moduleId === 'm03-fundamentals') updateNeuronSim();
+  if (moduleId === 'm04-architectures') renderArchitecture();
+  if (moduleId === 'm05-datasets') renderEdaTable();
+  if (moduleId === 'm07-evaluation') runLiveInference();
+}
+
+function advanceDemoStep() {
+  if (state.demoStep < 6) {
+    jumpToStep(state.demoStep + 1);
+  } else {
+    showToast('¡Secuencia Operativa completada con éxito!');
+  }
+}
+
+function jumpToStep(stepNum) {
+  state.demoStep = stepNum;
+  document.querySelectorAll('.demo-step-btn').forEach((btn, idx) => {
+    btn.classList.toggle('active', idx + 1 === stepNum);
+    if (idx + 1 < stepNum) btn.classList.add('completed');
+  });
+
+  const stepModuleMap = {
+    1: 'm02-projects',
+    2: 'm05-datasets',
+    3: 'm04-architectures',
+    4: 'm06-training',
+    5: 'm07-evaluation',
+    6: 'm08-models'
+  };
+  switchModule(stepModuleMap[stepNum]);
+  showToast(`Avanzado a Paso ${stepNum}: ${document.getElementById('breadcrumbModule').textContent}`);
+}
+
+function changeActiveRole(roleName) {
+  state.currentRole = roleName;
+  document.getElementById('currentUserRole').textContent = roleName;
+  showToast(`Rol activo cambiado a: ${roleName}`, '👤');
+  recordAudit('ROLE_SWITCHED', `Usuario adoptó vista con rol: ${roleName}`);
+}
+
+// ==========================================
+// THEME MANAGEMENT (MODO NOCTURNO / CLARO)
+// ==========================================
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  setTheme(newTheme);
+}
+
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('neurolab_theme', theme);
+  const icon = document.getElementById('themeToggleIcon');
+  const text = document.getElementById('themeToggleText');
+  if (theme === 'dark') {
+    if (icon) icon.textContent = '🌙';
+    if (text) text.textContent = 'Modo Nocturno';
+    showToast('Modo Nocturno activado (Gris grafito elegante y preciso)', '🌙');
+  } else {
+    if (icon) icon.textContent = '☀️';
+    if (text) text.textContent = 'Modo Claro';
+    showToast('Modo Claro activado (Gris perla suave y limpio)', '☀️');
+  }
+}
+
+// ==========================================
+// M03: SIMULADOR DE NEURONA (SEMANA 11)
+// ==========================================
+function updateNeuronSim() {
+  const x1 = parseFloat(document.getElementById('sliderX1').value);
+  const w1 = parseFloat(document.getElementById('sliderW1').value);
+  const x2 = parseFloat(document.getElementById('sliderX2').value);
+  const w2 = parseFloat(document.getElementById('sliderW2').value);
+  const x3 = parseFloat(document.getElementById('sliderX3').value);
+  const w3 = parseFloat(document.getElementById('sliderW3').value);
+  const b  = parseFloat(document.getElementById('sliderBias').value);
+  const act = document.getElementById('simActivation').value;
+
+  document.getElementById('valX1').textContent = x1.toFixed(2);
+  document.getElementById('valW1').textContent = w1.toFixed(2);
+  document.getElementById('valX2').textContent = x2.toFixed(2);
+  document.getElementById('valW2').textContent = w2.toFixed(2);
+  document.getElementById('valX3').textContent = x3.toFixed(2);
+  document.getElementById('valW3').textContent = w3.toFixed(2);
+  document.getElementById('valBias').textContent = b.toFixed(2);
+
+  // Sum: z = x1*w1 + x2*w2 + x3*w3 + b
+  const z = (x1 * w1) + (x2 * w2) + (x3 * w3) + b;
+
+  let y = 0;
+  let actText = '';
+  if (act === 'relu') {
+    y = Math.max(0, z);
+    actText = 'Función ReLU: y = max(0, z)';
+  } else if (act === 'sigmoid') {
+    y = 1 / (1 + Math.exp(-z));
+    actText = 'Función Sigmoide comprimida en intervalo (0, 1)';
+  } else if (act === 'tanh') {
+    y = Math.tanh(z);
+    actText = 'Función Tangente Hiperbólica en rango (-1, 1)';
+  } else {
+    y = z;
+    actText = 'Función Lineal: y = z';
+  }
+
+  document.getElementById('neuronFormulaDisplay').textContent = 
+    `z = (${x1.toFixed(2)} * ${w1.toFixed(2)}) + (${x2.toFixed(2)} * ${w2.toFixed(2)}) + (${x3.toFixed(2)} * ${w3.toFixed(2)}) + (${b.toFixed(2)}) = ${z.toFixed(2)}`;
+
+  document.getElementById('neuronOutputVal').textContent = y.toFixed(4);
+  document.getElementById('neuronActivationText').textContent = actText;
+}
+
+function switchFundTab(tabKey, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  document.getElementById('fund-tab-simulator').style.display = tabKey === 'simulator' ? 'block' : 'none';
+  document.getElementById('fund-tab-activations').style.display = tabKey === 'activations' ? 'block' : 'none';
+  document.getElementById('fund-tab-families').style.display = tabKey === 'families' ? 'block' : 'none';
+  document.getElementById('fund-tab-glossary').style.display = tabKey === 'glossary' ? 'block' : 'none';
+}
+
+// ==========================================
+// M04: DISEÑADOR DE ARQUITECTURAS
+// ==========================================
+function renderArchitecture() {
+  const listEl = document.getElementById('archLayersList');
+  listEl.innerHTML = '';
+
+  let totalParams = 0;
+  let prevUnits = state.activeDataset.inputShape;
+
+  state.activeArchitecture.layers.forEach((layer, idx) => {
+    let layerParams = 0;
+    if (layer.type === 'Dense') {
+      layerParams = (prevUnits * layer.units) + layer.units;
+      prevUnits = layer.units;
+    }
+    totalParams += layerParams;
+
+    const row = document.createElement('div');
+    row.style = 'background:var(--bg-secondary); padding:10px 12px; border-radius:var(--radius-sm); border:1px solid var(--border-color); display:flex; align-items:center; justify-content:space-between;';
+    row.innerHTML = `
+      <div>
+        <strong style="color:var(--accent-cyan);">Capa ${idx + 1}: ${layer.type}</strong>
+        <span style="font-size:12px; color:var(--text-muted); margin-left:8px;">
+          ${layer.units ? layer.units + ' unidades • ' + layer.activation : 'Rate: ' + layer.rate}
+        </span>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:11px; color:var(--text-dim);">${layerParams} params</span>
+        <button class="btn btn-danger btn-sm" onclick="removeLayerFromArch(${idx})">✕</button>
+      </div>
+    `;
+    listEl.appendChild(row);
+  });
+
+  state.activeArchitecture.totalParams = totalParams;
+  document.getElementById('archTotalParams').textContent = totalParams.toLocaleString();
+  renderTopologySvg();
+  updateKerasCode();
+}
+
+function renderTopologySvg() {
+  const container = document.getElementById('archTopologyCanvas');
+  const layers = state.activeArchitecture.layers;
+  const numLayers = layers.length;
+
+  let svg = `<svg width="100%" height="100%" viewBox="0 0 500 240">`;
+  
+  // Calculate column positions
+  const colWidth = 500 / (numLayers + 2);
+
+  // Input Node
+  const inputX = colWidth * 0.8;
+  svg += `<circle cx="${inputX}" cy="120" r="18" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>`;
+  svg += `<text x="${inputX}" y="124" fill="#fff" font-size="10" text-anchor="middle" font-weight="bold">IN (${state.activeDataset.inputShape})</text>`;
+
+  // Layers
+  layers.forEach((layer, idx) => {
+    const x = colWidth * (idx + 1.8);
+    const count = Math.min(layer.units || 4, 6);
+    const spacing = 180 / (count + 1);
+
+    for (let i = 1; i <= count; i++) {
+      const y = 30 + (i * spacing);
+      svg += `<circle cx="${x}" cy="${y}" r="8" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>`;
+      // Connecting lines
+      if (idx === 0) {
+        svg += `<line x1="${inputX + 18}" y1="120" x2="${x - 8}" y2="${y}" stroke="rgba(56,189,248,0.2)" stroke-width="1"/>`;
+      }
+    }
+    svg += `<text x="${x}" y="230" fill="#94a3b8" font-size="10" text-anchor="middle">${layer.type} (${layer.units || layer.rate})</text>`;
+  });
+
+  svg += `</svg>`;
+  container.innerHTML = svg;
+}
+
+function updateKerasCode() {
+  const arch = state.activeArchitecture;
+  let code = `# NeuroLab Enterprise - Generación TensorFlow / Keras\n`;
+  code += `import tensorflow as tf\nfrom tensorflow import keras\nfrom tensorflow.keras import layers\n\n`;
+  code += `def build_neurolab_model():\n`;
+  code += `    model = keras.Sequential([\n`;
+  code += `        layers.Input(shape=(${state.activeDataset.inputShape},)),\n`;
+
+  arch.layers.forEach(l => {
+    if (l.type === 'Dense') {
+      code += `        layers.Dense(${l.units}, activation='${l.activation}'),\n`;
+    } else if (l.type === 'Dropout') {
+      code += `        layers.Dropout(${l.rate}),\n`;
+    }
+  });
+
+  code += `    ])\n`;
+  code += `    model.compile(\n`;
+  code += `        optimizer=keras.optimizers.Adam(learning_rate=0.005),\n`;
+  code += `        loss='binary_crossentropy',\n`;
+  code += `        metrics=['accuracy']\n`;
+  code += `    )\n`;
+  code += `    return model\n\n`;
+  code += `model = build_neurolab_model()\nmodel.summary()\n`;
+
+  document.getElementById('kerasCodePreview').textContent = code;
+}
+
+function addLayerToArch() {
+  state.activeArchitecture.layers.splice(state.activeArchitecture.layers.length - 1, 0, {
+    id: 'l_' + Date.now(),
+    type: 'Dense',
+    units: 8,
+    activation: 'relu',
+    params: 64
+  });
+  renderArchitecture();
+  showToast('Capa Dense añadida a la arquitectura.');
+}
+
+function removeLayerFromArch(idx) {
+  if (state.activeArchitecture.layers.length <= 2) {
+    showToast('La arquitectura debe tener al menos una capa oculta y la capa de salida.', '⚠️');
+    return;
+  }
+  state.activeArchitecture.layers.splice(idx, 1);
+  renderArchitecture();
+  showToast('Capa eliminada.');
+}
+
+function saveArchitecture() {
+  recordAudit('ARCHITECTURE_SAVED', `Arquitectura ${state.activeArchitecture.name} versionada con ${state.activeArchitecture.totalParams} parámetros`);
+  showToast(`Arquitectura '${state.activeArchitecture.name}' guardada exitosamente.`);
+}
+
+function copyKerasCode() {
+  const code = document.getElementById('kerasCodePreview').textContent;
+  navigator.clipboard?.writeText(code);
+  showToast('Código Keras copiado al portapapeles.', '📋');
+}
+
+// ==========================================
+// M05: DATASETS & EDA AUTOMÁTICO
+// ==========================================
+const sampleDatasets = {
+  arrhythmia: {
+    name: 'Arrhythmia_ECG_Cleaned.csv',
+    rows: 750,
+    inputShape: 8,
+    targetCol: 'has_arrhythmia',
+    splits: { train: 525, val: 112, test: 113 },
+    columns: [
+      { name: 'heart_rate', type: 'Numérico', min: 48, max: 154, mean: 78.4, std: 14.2, nulls: 0 },
+      { name: 'pr_interval', type: 'Numérico', min: 110, max: 240, mean: 168.1, std: 22.5, nulls: 0 },
+      { name: 'qrs_duration', type: 'Numérico', min: 65, max: 160, mean: 92.6, std: 18.0, nulls: 0 },
+      { name: 'qt_interval', type: 'Numérico', min: 320, max: 480, mean: 395.2, std: 31.4, nulls: 0 },
+      { name: 'st_elevation', type: 'Numérico', min: 0.0, max: 4.8, mean: 0.65, std: 0.92, nulls: 0 },
+      { name: 't_wave_inversion', type: 'Binario (0/1)', min: 0, max: 1, mean: 0.28, std: 0.45, nulls: 0 },
+      { name: 'age', type: 'Numérico', min: 21, max: 88, mean: 56.3, std: 12.8, nulls: 0 },
+      { name: 'systolic_bp', type: 'Numérico', min: 95, max: 190, mean: 132.0, std: 16.5, nulls: 0 },
+      { name: 'has_arrhythmia', type: 'Target (0/1)', min: 0, max: 1, mean: 0.44, std: 0.50, nulls: 0 }
+    ]
+  },
+  iris: {
+    name: 'Iris_Flowers_Multiclass.csv',
+    rows: 150,
+    inputShape: 4,
+    targetCol: 'species',
+    splits: { train: 105, val: 22, test: 23 },
+    columns: [
+      { name: 'sepal_length', type: 'Numérico', min: 4.3, max: 7.9, mean: 5.84, std: 0.83, nulls: 0 },
+      { name: 'sepal_width', type: 'Numérico', min: 2.0, max: 4.4, mean: 3.05, std: 0.43, nulls: 0 },
+      { name: 'petal_length', type: 'Numérico', min: 1.0, max: 6.9, mean: 3.76, std: 1.76, nulls: 0 },
+      { name: 'petal_width', type: 'Numérico', min: 0.1, max: 2.5, mean: 1.20, std: 0.76, nulls: 0 },
+      { name: 'species', type: 'Target (3 clases)', min: 0, max: 2, mean: 1.00, std: 0.82, nulls: 0 }
+    ]
+  },
+  housing: {
+    name: 'California_Housing_Regression.csv',
+    rows: 1200,
+    inputShape: 6,
+    targetCol: 'median_house_value',
+    splits: { train: 840, val: 180, test: 180 },
+    columns: [
+      { name: 'median_income', type: 'Numérico', min: 1.5, max: 15.0, mean: 3.87, std: 1.90, nulls: 0 },
+      { name: 'housing_median_age', type: 'Numérico', min: 1.0, max: 52.0, mean: 28.6, std: 12.5, nulls: 0 },
+      { name: 'total_rooms', type: 'Numérico', min: 20, max: 12000, mean: 2635, std: 2181, nulls: 0 },
+      { name: 'population', type: 'Numérico', min: 10, max: 8000, mean: 1425, std: 1132, nulls: 0 },
+      { name: 'households', type: 'Numérico', min: 5, max: 3000, mean: 499, std: 382, nulls: 0 },
+      { name: 'median_house_value', type: 'Target (Cont)', min: 50000, max: 500000, mean: 206855, std: 115395, nulls: 0 }
+    ]
+  },
+  churn: {
+    name: 'Customer_Churn_Telco.csv',
+    rows: 950,
+    inputShape: 7,
+    targetCol: 'churn',
+    splits: { train: 665, val: 142, test: 143 },
+    columns: [
+      { name: 'tenure_months', type: 'Numérico', min: 1, max: 72, mean: 32.4, std: 24.5, nulls: 0 },
+      { name: 'monthly_charges', type: 'Numérico', min: 18.2, max: 118.7, mean: 64.7, std: 30.1, nulls: 0 },
+      { name: 'total_charges', type: 'Numérico', min: 18.8, max: 8684.8, mean: 2283.3, std: 2266.7, nulls: 0 },
+      { name: 'contract_type', type: 'Categórico', min: 0, max: 2, mean: 0.68, std: 0.83, nulls: 0 },
+      { name: 'churn', type: 'Target (0/1)', min: 0, max: 1, mean: 0.26, std: 0.44, nulls: 0 }
+    ]
+  }
+};
+
+function loadSampleDataset(key) {
+  const ds = sampleDatasets[key];
+  if (!ds) return;
+
+  state.activeDataset = ds;
+  document.getElementById('dsTotalRows').textContent = ds.rows;
+  document.getElementById('dsInputShape').textContent = ds.inputShape;
+  document.getElementById('dsTargetCol').textContent = ds.targetCol;
+  document.getElementById('dsSplitSummary').textContent = '70% / 15% / 15%';
+  document.getElementById('archInputShapeBadge').textContent = `${ds.inputShape} características (input_shape=[${ds.inputShape}])`;
+
+  renderEdaTable();
+  renderArchitecture();
+  recordAudit('DATASET_LOADED', `Dataset ${ds.name} cargado. Partición generada (Train: ${ds.splits.train}, Val: ${ds.splits.val}, Test: ${ds.splits.test})`);
+  showToast(`Dataset '${ds.name}' cargado con éxito. EDA calculado.`);
+}
+
+function renderEdaTable() {
+  const tbody = document.getElementById('dsEdaTableBody');
+  tbody.innerHTML = '';
+  const cols = state.activeDataset.columns || sampleDatasets.arrhythmia.columns;
+
+  cols.forEach(col => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${col.name}</strong></td>
+      <td><span class="badge" style="background:var(--bg-tertiary); color:var(--accent-cyan);">${col.type}</span></td>
+      <td>${col.min}</td>
+      <td>${col.max}</td>
+      <td>${col.mean}</td>
+      <td>${col.std}</td>
+      <td><span style="color:#10b981;">${col.nulls}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function handleCsvUpload(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+
+  showToast(`Procesando archivo '${file.name}' con EDA automático...`);
+  setTimeout(() => {
+    state.activeDataset = {
+      name: file.name,
+      rows: 620,
+      inputShape: 6,
+      targetCol: 'outcome',
+      splits: { train: 434, val: 93, test: 93 },
+      columns: [
+        { name: 'feature_1', type: 'Numérico', min: 1.2, max: 9.8, mean: 5.4, std: 1.6, nulls: 0 },
+        { name: 'feature_2', type: 'Numérico', min: 0.1, max: 4.5, mean: 2.1, std: 0.9, nulls: 0 },
+        { name: 'feature_3', type: 'Numérico', min: 10, max: 90, mean: 45.0, std: 12.0, nulls: 0 },
+        { name: 'feature_4', type: 'Numérico', min: 100, max: 500, mean: 280.0, std: 45.0, nulls: 0 },
+        { name: 'feature_5', type: 'Numérico', min: 0.0, max: 1.0, mean: 0.35, std: 0.48, nulls: 0 },
+        { name: 'feature_6', type: 'Numérico', min: 20, max: 80, mean: 52.0, std: 8.5, nulls: 0 },
+        { name: 'outcome', type: 'Target (0/1)', min: 0, max: 1, mean: 0.48, std: 0.50, nulls: 0 }
+      ]
+    };
+    loadSampleDataset('arrhythmia'); // refresh views
+    state.activeDataset.name = file.name;
+    document.getElementById('dsTotalRows').textContent = 620;
+    recordAudit('CUSTOM_DATASET_UPLOADED', `Archivo CSV ${file.name} cargado con ${state.activeDataset.rows} filas.`);
+    showToast(`Dataset '${file.name}' verificado y cargado exitosamente.`);
+  }, 400);
+}
+
+// ==========================================
+// M06: ENTRENAMIENTO SIMULADO (ESTADOS Y TELEMETRÍA)
+// ==========================================
+function startSimulatedTraining() {
+  if (state.training.isTraining) return;
+
+  const epochs = parseInt(document.getElementById('trainEpochsInput').value) || 25;
+  state.training.totalEpochs = epochs;
+  state.training.currentEpoch = 0;
+  state.training.isTraining = true;
+  state.training.metricsHistory = [];
+
+  // Update UI State Badge
+  updateTrainingState('PREPARING');
+  document.getElementById('btnStartTraining').disabled = true;
+  document.getElementById('btnCancelTraining').disabled = false;
+  document.getElementById('trainingLogsBox').textContent = '';
+
+  logTraining(`[Supervisor] Iniciando validación dimensional: Input(${state.activeDataset.inputShape}) -> Target(${state.activeDataset.targetCol})`);
+  logTraining(`[Supervisor] Creando partición en memoria: Train(70%), Val(15%), Test(15%)`);
+  
+  setTimeout(() => {
+    updateTrainingState('RUNNING');
+    logTraining(`[Worker] Optimizador Adam listo (lr=0.005). Iniciando época 1/${epochs}...`);
+    
+    // Clear SVG chart paths
+    resetChartPaths();
+
+    let loss = 0.820;
+    let valLoss = 0.860;
+    let acc = 0.510;
+    let valAcc = 0.490;
+
+    state.training.timerId = setInterval(() => {
+      state.training.currentEpoch++;
+      const ep = state.training.currentEpoch;
+      const progress = Math.round((ep / epochs) * 100);
+
+      // Math decay simulation
+      const decay = 0.028 / (1.0 + ep * 0.12);
+      loss = Math.max(0.042, loss - decay + (Math.random() * 0.008 - 0.004));
+      valLoss = Math.max(0.055, valLoss - (decay * 0.88) + (Math.random() * 0.012 - 0.005));
+      acc = Math.min(0.985, acc + (0.024 / (1.0 + ep * 0.08)) + (Math.random() * 0.005 - 0.002));
+      valAcc = Math.min(0.970, valAcc + (0.020 / (1.0 + ep * 0.08)) + (Math.random() * 0.008 - 0.004));
+
+      // Update Live Indicators
+      document.getElementById('trainEpochCounter').textContent = `Época: ${ep} / ${epochs}`;
+      document.getElementById('trainProgressPercent').textContent = `${progress}%`;
+      document.getElementById('trainProgressBar').style.width = `${progress}%`;
+
+      document.getElementById('liveTrainLoss').textContent = loss.toFixed(4);
+      document.getElementById('liveValLoss').textContent = valLoss.toFixed(4);
+      document.getElementById('liveTrainAcc').textContent = (acc * 100).toFixed(1) + '%';
+      document.getElementById('liveValAcc').textContent = (valAcc * 100).toFixed(1) + '%';
+
+      logTraining(`Época ${ep}/${epochs} - loss: ${loss.toFixed(4)} - acc: ${(acc * 100).toFixed(1)}% - val_loss: ${valLoss.toFixed(4)} - val_acc: ${(valAcc * 100).toFixed(1)}%`);
+
+      // Record History & update chart
+      state.training.metricsHistory.push({ epoch: ep, loss, valLoss, acc, valAcc });
+      updateLiveChartPoint(ep, epochs, loss, valLoss, acc, valAcc);
+
+      // Finish Condition
+      if (ep >= epochs) {
+        clearInterval(state.training.timerId);
+        finishTraining(acc, loss);
+      }
+    }, 280);
+
+  }, 600);
+}
+
+function cancelTraining() {
+  if (!state.training.isTraining) return;
+  clearInterval(state.training.timerId);
+  state.training.isTraining = false;
+  updateTrainingState('CANCELLED');
+  logTraining(`[Worker] Solicitud de cancelación cooperativa confirmada por el usuario.`);
+  document.getElementById('btnStartTraining').disabled = false;
+  document.getElementById('btnCancelTraining').disabled = true;
+  recordAudit('TRAINING_CANCELLED', `Entrenamiento detenido en época ${state.training.currentEpoch}`);
+  showToast('Entrenamiento cancelado cooperativamente.', '⏹');
+}
+
+function finishTraining(finalAcc, finalLoss) {
+  state.training.isTraining = false;
+  updateTrainingState('COMPLETED');
+  document.getElementById('btnStartTraining').disabled = false;
+  document.getElementById('btnCancelTraining').disabled = true;
+
+  logTraining(`[Worker] Entrenamiento completado con éxito. Evaluando modelo final con el Test Set aislado (15%)...`);
+
+  // Update Evaluation Module metrics
+  document.getElementById('evalTestAcc').textContent = (finalAcc * 100 - 0.8).toFixed(1) + '%';
+  document.getElementById('evalPrecision').textContent = (finalAcc * 100 - 0.2).toFixed(1) + '%';
+  document.getElementById('evalRecall').textContent = (finalAcc * 100 - 1.2).toFixed(1) + '%';
+
+  recordAudit('TRAINING_COMPLETED', `Modelo entrenado en ${state.training.totalEpochs} épocas. Test Acc: ${(finalAcc * 100).toFixed(1)}%`);
+  showToast(`¡Entrenamiento completado! Precisión en Test: ${(finalAcc * 100).toFixed(1)}%`);
+}
+
+function updateTrainingState(st) {
+  state.training.status = st;
+  const badge = document.getElementById('trainingStateBadge');
+  badge.className = `status-badge status-${st.toLowerCase()}`;
+  badge.textContent = `ESTADO: ${st}`;
+}
+
+function logTraining(msg) {
+  const box = document.getElementById('trainingLogsBox');
+  box.textContent += msg + '\n';
+  box.scrollTop = box.scrollHeight;
+}
+
+// ==========================================
+// M07: EVALUACIÓN & GRÁFICOS EN VIVO
+// ==========================================
+function resetChartPaths() {
+  document.getElementById('pathTrainLoss').setAttribute('d', 'M 40 40');
+  document.getElementById('pathValLoss').setAttribute('d', 'M 40 45');
+  document.getElementById('pathTrainAcc').setAttribute('d', 'M 40 160');
+  document.getElementById('pathValAcc').setAttribute('d', 'M 40 165');
+}
+
+function updateLiveChartPoint(epoch, totalEpochs, loss, valLoss, acc, valAcc) {
+  const x = 40 + ((epoch / totalEpochs) * 430);
+  
+  // Loss mapped to Y: [20, 100]
+  const yLoss = 20 + (loss * 120);
+  const yValLoss = 20 + (valLoss * 120);
+
+  // Acc mapped to Y: [110, 190] inverted (higher acc = lower Y)
+  const yAcc = 190 - (acc * 70);
+  const yValAcc = 190 - (valAcc * 70);
+
+  appendToSvgPath('pathTrainLoss', x, yLoss);
+  appendToSvgPath('pathValLoss', x, yValLoss);
+  appendToSvgPath('pathTrainAcc', x, yAcc);
+  appendToSvgPath('pathValAcc', x, yValAcc);
+}
+
+function appendToSvgPath(id, x, y) {
+  const path = document.getElementById(id);
+  const currentD = path.getAttribute('d') || '';
+  path.setAttribute('d', `${currentD} L ${x.toFixed(1)} ${y.toFixed(1)}`);
+}
+
+function runLiveInference() {
+  const hr = parseFloat(document.getElementById('infSliderHR').value);
+  const pr = parseFloat(document.getElementById('infSliderPR').value);
+  const st = parseFloat(document.getElementById('infSliderST').value);
+  const age = parseFloat(document.getElementById('infSliderAge').value);
+
+  document.getElementById('infValHR').textContent = hr;
+  document.getElementById('infValPR').textContent = pr;
+  document.getElementById('infValST').textContent = st.toFixed(1);
+  document.getElementById('infValAge').textContent = age;
+
+  // Neural inference simulation function:
+  // Risk score increases with ST elevation, high PR, extreme HR
+  let riskScore = 0.05 + (st * 0.18) + (hr > 100 ? (hr - 100) * 0.008 : 0) + (pr > 200 ? 0.20 : 0);
+  riskScore = Math.max(0.01, Math.min(0.99, riskScore));
+
+  const hasArrhythmia = riskScore >= 0.45;
+  const confidence = hasArrhythmia ? riskScore : (1 - riskScore);
+
+  const labelEl = document.getElementById('inferencePredictionLabel');
+  const descEl = document.getElementById('inferenceScoreDesc');
+  const confPctEl = document.getElementById('inferenceConfidencePct');
+  const confBarEl = document.getElementById('inferenceConfidenceBar');
+
+  if (hasArrhythmia) {
+    labelEl.textContent = 'PATRÓN ANORMAL DETECTADO (ARRITMIA)';
+    labelEl.style.color = 'var(--accent-rose)';
+    confPctEl.style.color = 'var(--accent-rose)';
+    confBarEl.style.background = 'var(--accent-rose)';
+  } else {
+    labelEl.textContent = 'PATRÓN CARDÍACO NORMAL (SANO)';
+    labelEl.style.color = 'var(--accent-emerald)';
+    confPctEl.style.color = 'var(--accent-emerald)';
+    confBarEl.style.background = 'var(--accent-emerald)';
+  }
+
+  descEl.textContent = `Probabilidad estimada de arritmia: ${(riskScore * 100).toFixed(1)}%`;
+  confPctEl.textContent = `${(confidence * 100).toFixed(1)}%`;
+  confBarEl.style.width = `${(confidence * 100).toFixed(1)}%`;
+}
+
+function randomizeInferenceSample() {
+  document.getElementById('infSliderHR').value = Math.floor(Math.random() * (130 - 60) + 60);
+  document.getElementById('infSliderPR').value = Math.floor(Math.random() * (220 - 140) + 140);
+  document.getElementById('infSliderST').value = (Math.random() * 2.5).toFixed(1);
+  document.getElementById('infSliderAge').value = Math.floor(Math.random() * (80 - 30) + 30);
+  runLiveInference();
+  showToast('Muestra simulada generada.');
+}
+
+// ==========================================
+// M08: REGISTRO DE MODELOS (MODEL REGISTRY)
+// ==========================================
+function renderModelsTable() {
+  const tbody = document.getElementById('modelsTableBody');
+  tbody.innerHTML = '';
+
+  state.models.forEach((m, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${m.name}</strong></td>
+      <td><span class="badge" style="background:var(--bg-tertiary); color:var(--accent-cyan);">${m.version}</span></td>
+      <td><code style="font-size:11px; color:var(--text-muted);">${m.checksum.substring(0, 18)}...</code></td>
+      <td><strong style="color:var(--accent-emerald);">${m.testAcc}%</strong></td>
+      <td>${m.loss}</td>
+      <td>
+        <span class="status-badge ${m.status === 'Aprobado' ? 'status-completed' : (m.status === 'En Revisión' ? 'status-preparing' : 'status-queued')}">
+          ${m.status}
+        </span>
+      </td>
+      <td>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-secondary btn-sm" onclick="downloadModelArtifact('${m.id}')" title="Descargar Pesos y Configuración">💾 Descargar</button>
+          ${m.status !== 'Aprobado' ? `<button class="btn btn-success btn-sm" onclick="approveModel('${m.id}')">Aprobar</button>` : ''}
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function publishCurrentModelVersion() {
+  const newVer = `v1.0.${state.models.length}`;
+  const newModel = {
+    id: 'mod_' + Date.now(),
+    name: `MLP-Arrhythmia-${newVer}`,
+    version: newVer,
+    checksum: 'sha256:' + Math.random().toString(16).substring(2) + Math.random().toString(16).substring(2),
+    testAcc: parseFloat(document.getElementById('evalTestAcc').textContent) || 95.6,
+    loss: 0.076,
+    status: 'En Revisión',
+    date: new Date().toLocaleDateString('es-ES')
+  };
+  state.models.unshift(newModel);
+  renderModelsTable();
+  recordAudit('MODEL_REGISTERED', `Versión inmutable ${newVer} agregada al Model Registry`);
+  showToast(`Versión ${newVer} registrada con estado 'En Revisión'.`);
+}
+
+function approveModel(id) {
+  if (state.currentRole !== 'Administrador' && state.currentRole !== 'Revisor') {
+    showToast(`Acceso denegado: El rol '${state.currentRole}' no tiene permiso para aprobar modelos a producción. Requiere 'Revisor' o 'Administrador'.`, '⚠️');
+    return;
+  }
+  const m = state.models.find(x => x.id === id);
+  if (m) {
+    m.status = 'Aprobado';
+    renderModelsTable();
+    recordAudit('MODEL_APPROVED', `Modelo ${m.name} (${m.version}) aprobado para producción por ${document.getElementById('currentUserName').textContent}`);
+    showToast(`Modelo '${m.name}' APROBADO para producción.`);
+  }
+}
+
+function downloadModelArtifact(id) {
+  const m = state.models.find(x => x.id === id);
+  const data = {
+    model_name: m?.name || 'NeuroLab-Model',
+    version: m?.version || 'v1.0.0',
+    architecture: state.activeArchitecture,
+    hyperparameters: { optimizer: 'Adam', learning_rate: 0.005, loss: 'binary_crossentropy' },
+    weights_format: 'tensorflow_keras_v3',
+    checksum: m?.checksum
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${m?.name || 'model'}_manifest.json`;
+  a.click();
+  showToast('Descargando manifiesto y pesos del modelo...', '💾');
+}
+
+// ==========================================
+// M09: REPORTES & PDF
+// ==========================================
+function printOrExportPdf() {
+  window.print();
+  recordAudit('REPORT_GENERATED', 'Informe técnico en PDF exportado/impreso');
+  showToast('Generando vista de impresión/PDF para el reporte...', '📄');
+}
+
+function exportMetricsCsv() {
+  let csv = 'epoch,loss,val_loss,accuracy,val_accuracy\n';
+  if (state.training.metricsHistory.length === 0) {
+    for (let i = 1; i <= 25; i++) {
+      csv += `${i},${(0.8 / (1 + i * 0.1)).toFixed(4)},${(0.85 / (1 + i * 0.09)).toFixed(4)},${(0.5 + i * 0.018).toFixed(4)},${(0.48 + i * 0.017).toFixed(4)}\n`;
+    }
+  } else {
+    state.training.metricsHistory.forEach(h => {
+      csv += `${h.epoch},${h.loss.toFixed(4)},${h.valLoss.toFixed(4)},${h.acc.toFixed(4)},${h.valAcc.toFixed(4)}\n`;
+    });
+  }
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `neurolab_training_metrics_${Date.now()}.csv`;
+  a.click();
+  showToast('Historial de métricas descargado en formato CSV.', '📊');
+}
+
+// ==========================================
+// M10: ADMINISTRACIÓN & AUDITORÍA
+// ==========================================
+function renderUsersTable() {
+  const tbody = document.getElementById('usersTableBody');
+  tbody.innerHTML = '';
+  state.users.forEach(u => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${u.name}</strong></td>
+      <td>${u.email}</td>
+      <td><span class="badge" style="background:var(--bg-tertiary); color:var(--accent-cyan);">${u.role}</span></td>
+      <td><span style="color:#10b981;">● ${u.status}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function recordAudit(action, meta) {
+  const item = {
+    id: 'aud_' + Date.now(),
+    actor: document.getElementById('currentUserName').textContent,
+    action: action,
+    proj: state.activeProject.name,
+    time: new Date().toLocaleTimeString('es-ES'),
+    meta: meta
+  };
+  state.auditLogs.unshift(item);
+  renderAuditLogs();
+}
+
+function renderAuditLogs() {
+  const box = document.getElementById('auditLogsContainer');
+  box.innerHTML = '';
+  state.auditLogs.slice(0, 20).forEach(log => {
+    const div = document.createElement('div');
+    div.style = 'background:var(--bg-secondary); padding:10px; border-radius:var(--radius-sm); border-left:3px solid var(--accent-cyan); font-size:12px;';
+    div.innerHTML = `
+      <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+        <strong style="color:white;">${log.action}</strong>
+        <span style="color:var(--text-dim); font-size:10px;">${log.time}</span>
+      </div>
+      <div style="color:var(--text-muted); font-size:11px;">Actor: <span style="color:#c7d2fe;">${log.actor}</span> • Proj: ${log.proj}</div>
+      <div style="color:var(--text-dim); font-size:11px; margin-top:2px;">${log.meta}</div>
+    `;
+    box.appendChild(div);
+  });
+}
+
+function clearAuditLogs() {
+  state.auditLogs = [];
+  renderAuditLogs();
+  showToast('Vista de auditoría limpiada.');
+}
+
+// ==========================================
+// TOAST & MODAL HELPERS
+// ==========================================
+function showToast(msg, icon = 'ℹ️') {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMsg').textContent = msg;
+  toast.style.display = 'flex';
+  setTimeout(() => { toast.style.display = 'none'; }, 3500);
+}
+
+function openNewProjectModal() {
+  document.getElementById('modalTitle').textContent = 'Crear Nuevo Proyecto de IA';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">Nombre del Proyecto:</label>
+      <input type="text" id="newProjName" class="form-control" placeholder="Ej: Detección de Fallas en Maquinaria">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descripción del Problema a Resolver:</label>
+      <textarea id="newProjDesc" class="form-control" rows="3" placeholder="Describe los objetivos de negocio y la variable a predecir..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Familia de Red Recomendada:</label>
+      <select id="newProjFamily" class="form-control">
+        <option value="Feedforward">Feedforward (Tablas CSV / MLP)</option>
+        <option value="CNN">Convolucional (Imágenes / Visión)</option>
+        <option value="RNN">Recurrente (Series de Tiempo / Secuencias)</option>
+        <option value="GAN">Generativa Adversaria</option>
+      </select>
+    </div>
+    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="submitNewProject()">Crear Proyecto</button>
+    </div>
+  `;
+  document.getElementById('genericModal').style.display = 'flex';
+}
+
+function submitNewProject() {
+  const name = document.getElementById('newProjName').value.trim();
+  const desc = document.getElementById('newProjDesc').value.trim();
+  const fam = document.getElementById('newProjFamily').value;
+  if (!name) {
+    showToast('El nombre del proyecto es obligatorio.', '⚠️');
+    return;
+  }
+  state.activeProject = {
+    id: 'proj_' + Date.now(),
+    name: name,
+    problem: desc || 'Clasificación Supervisada',
+    family: fam,
+    tags: [fam, 'Semana 11']
+  };
+  document.getElementById('activeWorkspaceName').textContent = `Workspace: ${name.substring(0, 24)}`;
+  closeModal();
+  recordAudit('PROJECT_CREATED', `Nuevo proyecto '${name}' establecido como Workspace activo`);
+  renderProjectsTable();
+  showToast(`Proyecto '${name}' creado exitosamente.`);
+}
+
+function closeModal() {
+  document.getElementById('genericModal').style.display = 'none';
+}
+
+// ==========================================
+// PROJECTS TABLE
+// ==========================================
+const mockProjects = [
+  { id: 'p1', name: 'Detección de Arritmias Cardíacas (MLP)', problem: 'Clasificación Binaria', owner: 'Dr. Alex Vance', family: 'Feedforward', tags: ['Salud', 'Feedforward'], status: 'Activo' },
+  { id: 'p2', name: 'Clasificación de Especies Iris', problem: 'Clasificación Multiclase', owner: 'Ing. Carlos Mendez', family: 'Feedforward', tags: ['Botánica', 'Demo'], status: 'Activo' },
+  { id: 'p3', name: 'Pronóstico de Precios Inmobiliarios', problem: 'Regresión Continua', owner: 'Dr. Alex Vance', family: 'Feedforward', tags: ['Finanzas', 'MLP'], status: 'Activo' },
+  { id: 'p4', name: 'Predicción de Churn Telefónico', problem: 'Clasificación Binaria', owner: 'Dra. Elena Ramos', family: 'Feedforward', tags: ['Telecom', 'Clientes'], status: 'Activo' }
+];
+
+function renderProjectsTable() {
+  const tbody = document.getElementById('projectsTableBody');
+  tbody.innerHTML = '';
+  mockProjects.forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${p.name}</strong></td>
+      <td>${p.problem}</td>
+      <td>${p.owner}</td>
+      <td><span class="badge" style="background:var(--bg-tertiary); color:var(--accent-cyan);">${p.family}</span></td>
+      <td>${p.tags.map(t => `<span class="badge" style="background:rgba(255,255,255,0.05); margin-right:3px;">${t}</span>`).join('')}</td>
+      <td><span class="status-badge status-completed">${p.status}</span></td>
+      <td>
+        <button class="btn btn-secondary btn-sm" onclick="selectActiveProject('${p.id}', '${p.name}')">Seleccionar</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function selectActiveProject(id, name) {
+  state.activeProject.id = id;
+  state.activeProject.name = name;
+  document.getElementById('activeWorkspaceName').textContent = `Workspace: ${name.substring(0, 24)}`;
+  showToast(`Workspace cambiado a: ${name}`);
+}
+
+function filterProjectsTable() {
+  const q = document.getElementById('projectSearchInput').value.toLowerCase();
+  const fam = document.getElementById('projectFamilyFilter').value;
+  const rows = document.querySelectorAll('#projectsTableBody tr');
+  rows.forEach(r => {
+    const text = r.textContent.toLowerCase();
+    const matchesQ = text.includes(q);
+    const matchesFam = fam === 'ALL' || text.includes(fam.toLowerCase());
+    r.style.display = matchesQ && matchesFam ? '' : 'none';
+  });
+}
+
+// ==========================================
+// INITIALIZATION
+// ==========================================
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('neurolab_theme') || 'dark';
+  setTheme(savedTheme);
+
+  renderProjectsTable();
+  renderEdaTable();
+  renderArchitecture();
+  renderModelsTable();
+  renderUsersTable();
+  renderAuditLogs();
+  updateNeuronSim();
+  runLiveInference();
+
+  // Populate Dashboard Table
+  const dashBody = document.getElementById('dashJobsTableBody');
+  dashBody.innerHTML = `
+    <tr>
+      <td><code>job_ecg_01</code></td>
+      <td>MLP-Enterprise-V1</td>
+      <td>Arrhythmia_ECG_Cleaned.csv</td>
+      <td><span class="status-badge status-completed">COMPLETED</span></td>
+      <td>25 / 25</td>
+      <td><strong style="color:var(--accent-emerald);">95.6%</strong></td>
+    </tr>
+    <tr>
+      <td><code>job_iris_04</code></td>
+      <td>MLP-Iris-Softmax</td>
+      <td>Iris_Flowers.csv</td>
+      <td><span class="status-badge status-completed">COMPLETED</span></td>
+      <td>30 / 30</td>
+      <td><strong style="color:var(--accent-emerald);">97.1%</strong></td>
+    </tr>
+    <tr>
+      <td><code>job_churn_02</code></td>
+      <td>MLP-Telco-Dropout</td>
+      <td>Customer_Churn.csv</td>
+      <td><span class="status-badge status-cancelled">CANCELLED</span></td>
+      <td>14 / 40</td>
+      <td>82.4%</td>
+    </tr>
+  `;
+});
+</script>
+
+</body>
+</html>

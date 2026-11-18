@@ -1,0 +1,37 @@
+{
+  "name": "neurolab-enterprise-web",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 8000 --strictPort",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 8000 --strictPort",
+    "test": "tsx --test src/tests/*.test.ts",
+    "test:e2e": "playwright test",
+    "format": "prettier --write src package.json tsconfig.json vite.config.ts playwright.config.ts index.html"
+  },
+  "dependencies": {
+    "jspdf": "*",
+    "lucide-react": "*",
+    "pdfjs-dist": "^6.5.438",
+    "react": "*",
+    "react-dom": "*",
+    "react-router-dom": "*",
+    "recharts": "*"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "@vitejs/plugin-react": "*",
+    "prettier": "^3.10.1",
+    "tsx": "*",
+    "typescript": "*",
+    "vite": "*"
+  }
+}

@@ -1,0 +1,11 @@
+/.venv/
+/node_modules/
+/docs/
+/infra/
+/services/
+/workers/
+/*.log
+/apps/web/node_modules/
+/apps/web/dist/
+/apps/web/legacy/
+/apps/web/test-results/

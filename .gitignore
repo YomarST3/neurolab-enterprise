@@ -1,0 +1,22 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Node / build artifacts
+node_modules/
+dist/
+test-results/
+playwright-report/
+
+# Logs
+*.log
+
+# Vercel local metadata (the deployment config lives in vercel.json)
+.vercel/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
